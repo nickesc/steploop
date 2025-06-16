@@ -1,0 +1,18 @@
+{
+  "compilerOptions": {
+    /* Base Options: */
+    "outDir": "dist",
+    "target": "esnext",
+    "module": "esnext",
+    "esModuleInterop": true,
+    "rewriteRelativeImportExtensions": true,
+    "erasableSyntaxOnly": true,
+    "verbatimModuleSyntax": true,
+
+    /* Type Checking */
+    "strict": true,
+    "noUncheckedIndexedAccess": true,
+    "noImplicitOverride": true,
+    "noFallthroughCasesInSwitch": true,
+  }
+}
