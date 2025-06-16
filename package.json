@@ -1,0 +1,28 @@
+{
+  "name": "steploop",
+  "version": "1.0.0",
+  "description": "a fully-featured main-loop written in TypeScript",
+  "keywords": [],
+  "homepage": "https://github.com/nickesc/steploop#readme",
+  "bugs": {
+    "url": "https://github.com/nickesc/steploop/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nickesc/steploop.git"
+  },
+  "license": "MIT",
+  "author": "N. Escobar <nick@nescobar.media> (https://nickesc.github.io/)",
+  "type": "module",
+  "main": "steploop.ts",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "node ./tests/tests.ts",
+    "build": "npx tsc"
+  },
+  "devDependencies": {
+    "typescript": "^5.8.3"
+  }
+}
