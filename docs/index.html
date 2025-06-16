@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>steploop Demo</title>
+  </head>
+  <body>
+    <div>
+        <h1>steploop Demo</h1>
+        <h6>by <a href="https://nickesc.github.io">N. Escobar</a> / <a href="https://github.com/nickesc">nickesc</a></h6>
+    </div>
+
+    <div>
+        <h2>System</h2>
+        <div>
+            <!-- <div>
+                <button id="new">New</button>
+            </div> -->
+            <div>
+                <div>Step: <span id="frame">0</span></div>
+                <div>Lifespan: <span id="span">0</span></div>
+            </div>
+            <div>
+                <label for="lifespan">Lifespan</label><input type="text" name="lifespan" id="lifespan" value="500">
+                <label for="sps">Steps-per-second</label><input type="text" name="sps" id="sps" value="60">
+                <button id="set-sps">Set SPS</button>
+            </div>
+            <div>
+                <button id="start">Start</button>
+                <button id="finish">Finish</button>
+            </div>
+            <div>
+                <button id="pause">Pause</button>
+                <button id="play">Play</button>
+            </div>
+            <div>
+                <label for="extension">Extension</label><input type="text" name="extension" id="extension" value="500">
+                <button id="extend">Extend</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js" type="module"></script>
+  </body>
+</html>
