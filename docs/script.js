@@ -1,4 +1,4 @@
-import { StepLoop } from "../dist/steploop.js";
+import { StepLoop } from "./steploop.js";
 
 //const new_loop = document.getElementById("new")
 const frame = document.getElementById("frame")

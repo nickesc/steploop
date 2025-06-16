@@ -1,7 +1,20 @@
 /**
- * The {@link StepLoop} class provides a base for a loop with steps executed at a certain rate of steps-per-second.
+ * The {@link StepLoop} class provides a base for a loop with steps executed at a set rate of steps-per-second.
  *
  * Executes at 60 steps-per-second by default.
+ *
+ * Executes in three stages:
+ *
+ * ##### 1. Initialization Stage
+ * - {@link StepLoop.initial()}
+ * ##### 2. Looping Stage
+ * 1. {@link StepLoop.before()}
+ * 2. {@link StepLoop.step()}
+ * 3. {@link StepLoop.after()}
+ * ##### 3. Termination Stage
+ * - {@link StepLoop.final()}
+ *
+ * The initialization stage and termination stage each execute once, as the first step and last step respectively. The looping stage will start after the initialization stage is done, and it will loop through its three parts until something triggers the termination stage and its lifecycle comes to an end.
  */
 class StepLoop {
     _step_num = 0;
@@ -281,18 +294,7 @@ class StepLoop {
         this._run();
     }
     /**
-     * Begin execution of the {@link StepLoop} lifecycle:
-     *
-     * ##### 1. Initialization Stage
-     * - {@link StepLoop.initial()}
-     * ##### 2. Looping Stage
-     * 1. {@link StepLoop.before()}
-     * 2. {@link StepLoop.step()}
-     * 3. {@link StepLoop.after()}
-     * ##### 3. Termination Stage
-     * - {@link StepLoop.final()}
-     *
-     * Calls {@link StepLoop.initial()} to execute the initialization stage, then proceeds to the looping stage. The termination stage will not execute until {@link StepLoop.finish()} is called.
+     * Begin execution of the {@link StepLoop} lifecycle. Calls {@link StepLoop.initial()} to execute the initialization stage, then proceeds to the looping stage. The termination stage will not execute until {@link StepLoop.finish()} is called.
      *
      * If {@link StepLoop.start()} is called after the termination stage has ended, the loop will restart at the beginning of the initialization stage.
      *
