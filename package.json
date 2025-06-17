@@ -19,10 +19,12 @@
     "test": "tests"
   },
   "scripts": {
-    "test": "node ./tests/tests.ts",
+    "test": "npx tsx steploop.ts",
     "build": "npx tsc"
   },
   "devDependencies": {
+    "ts-node": "^10.9.2",
+    "tsx": "^4.20.3",
     "typescript": "^5.8.3"
   }
 }
