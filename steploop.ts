@@ -354,11 +354,12 @@ class StepLoop {
      * ```
      */
     public finish(): void {
-        if (!this._initialized) return;
+        if (!this._initialized || this._kill) return;
 
         this._running = false;
         this._kill = true;
         this._cancel_next_step();
+        this._term()
     }
 
     private _request_next_step(): void {
