@@ -44,6 +44,8 @@ class StepLoop {
     }
 
     /**
+     * Override {@link StepLoop.initial()} to add an initial block of code to execute at the very beginning of the loop.
+     *
      * The first code executed in the {@link StepLoop}. Called once at the beginning of the {@link StepLoop} lifecycle, and then moves on to the first {@link StepLoop.background()} call in the looping stage after resolving. Executed right after {@link StepLoop.start()} is called.
      *
      * @returns {void} `void`
@@ -61,6 +63,8 @@ class StepLoop {
     }
 
     /**
+     * Override {@link StepLoop.background()} to add a block of code to run in the background of each step of your loop.
+     *
      * Executed in the background at the beginning of the looping stage. Called asynchronously before the rest of the loop, executes while the rest of the loop does. Starts before {@link StepLoop.before()} but may not resolve before it is called.
      *
      * @returns {Promise<void>} `Promise<void>`
@@ -78,6 +82,8 @@ class StepLoop {
     }
 
     /**
+     * Override {@link StepLoop.before()} to add a block of code to run before each step of your loop.
+     *
      * Executed in the looping stage before the main {@link StepLoop.step()} code. Resolves before calling {@link StepLoop.step()}. Use this function to set up anything you need before {@link StepLoop.step()} is called.
      *
      * @returns {void} `void`
@@ -95,6 +101,8 @@ class StepLoop {
     }
 
     /**
+     * Override {@link StepLoop.step()} to add the code for the main step of your loop.
+     *
      * The main loop code executed in the looping stage. Called after {@link StepLoop.before()} resolves, and resolves before {@link StepLoop.after()} is called. Use {@link StepLoop.step()} as the main update function of your {@link StepLoop}.
      *
      * @returns {void} `void`
@@ -112,6 +120,8 @@ class StepLoop {
     }
 
     /**
+     * Override {@link StepLoop.after()} to add a block of code to run after each step of your loop.
+     *
      * Executed in the looping stage after the main {@link StepLoop.step()} code. Called after {@link StepLoop.step()} resolves. Use this function to clean up anything after {@link StepLoop.step()} resolves.
      *
      * @returns {void} `void`
@@ -129,6 +139,8 @@ class StepLoop {
     }
 
     /**
+     * Override {@link StepLoop.final()} to add a final block of code to run at the very end of the loop.
+     *
      * The last code executed in the {@link StepLoop}, called after the looping stage is done. Executed once at the end of the {@link StepLoop} lifecycle, and then kills the loop. Called when the number of steps executed is greater than the lifespan of the {@link StepLoop} (i. e. {@link StepLoop.get_step()} `>` {@link StepLoop.get_lifespan()}) or when {@link StepLoop.finish()} is called.
      *
      * @returns {void} `void`
