@@ -36,15 +36,15 @@ class App extends StepLoop {
     }
 }
 function testSteploop() {
-    const testLoop = new App(100, 1000);
+    const testLoop = new App(250, 1000);
     testLoop.start();
     return true;
 }
 const status = testSteploop();
 if (status) {
-    console.log("\n\nSUCCESS: `steploop` PASSED automated tests\n\n");
+    console.log("\n\nSUCCESS: `steploop` lifespan is correct\n\n");
 }
 else {
-    throw new Error("\n\FAILURE: `steploop` FAILED automated tests\n\n");
+    throw new Error("\n\FAILURE: `steploop` lifespan does not match expectations\n\n");
 }
 //(-)/1000*60

@@ -4,6 +4,7 @@
     "outDir": "docs",
     "target": "esnext",
     "module": "esnext",
+    "moduleResolution": "node",
     //"allowJs": true,
     "esModuleInterop": true,
     //"skipLibCheck": true,
