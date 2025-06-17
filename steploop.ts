@@ -25,7 +25,7 @@ class StepLoop {
     private _sps: number;
     private _interval: number;
     private _lastTime: number;
-    private _timeoutId: number | ReturnType<typeof setTimeout> | undefined;
+    private _timeoutId: ReturnType<typeof setTimeout> | undefined;
 
     private _initialized: boolean = false;
     private _running: boolean = false;
