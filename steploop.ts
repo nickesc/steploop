@@ -1,4 +1,6 @@
 /**
+ * Extend the {@link StepLoop} class to define your own loop.
+ *
  * The {@link StepLoop} class provides a base for a loop with steps executed at a set rate of steps-per-second.
  *
  * Executes at 60 steps-per-second by default.
@@ -30,9 +32,9 @@ class StepLoop {
     private _kill: boolean = false;
 
     /**
-     * Create a `StepLoop`.
-     * @param {number} sps - the steps-per-second of the loop
-     * @param {number} lifespan - the number of steps that are executed before the loop ends
+     * Create a `StepLoop`, with options to define the steps-per-second and the lifespan of the loop.
+     * @param {number} sps - the steps-per-second of the loop (note: values that are greater than about 250 may result in unexpected behavior); default value is 60
+     * @param {number | undefined} lifespan - the number of steps that are executed before the loop ends; setting to `undefined` will result in an unlimited lifespan; default value is `undefined`
      */
     constructor(sps: number = 60, lifespan: number | undefined = undefined) {
         this._lifespan = lifespan;
@@ -233,7 +235,7 @@ class StepLoop {
     /**
      * Returns the current lifespan of the {@link StepLoop} (in steps).
      *
-     * @returns {number} the current loop lifespan
+     * @returns {number | undefined} the current loop lifespan; returns `undefined` if the lifespan is unlimited
      * @example
      * ```ts
      * class App extends StepLoop {}
@@ -250,10 +252,10 @@ class StepLoop {
     /**
      * Extend (or reduce) the lifespan of the {@link StepLoop}. Adds the specified number of steps to the current lifespan, or removes the limit on the {@link StepLoop}'s lifespan (will run until {@link StepLoop.finish()} is called).
      *
-     * If {@link StepLoop.extend_lifespan()} is called after the lifespan limit is reached, {@link StepLoop.play()} cna be called to resume executing the {@link StepLoop}. The termination stage will be executed again when the limit is reached again.
+     * If {@link StepLoop.extend_lifespan()} is called after the lifespan limit is reached, {@link StepLoop.play()} can be called to resume executing the {@link StepLoop}. The termination stage will be executed again when the limit is reached again.
      *
-     * @param {number} steps - the target lifespan (in number of steps)
-     * @returns {number} the new lifespan
+     * @param {number} [steps] - the target lifespan (in number of steps); if `undefined` the lifespan becomes unlimited; default value is `undefined` if not provided
+     * @returns {number | undefined} the new lifespan
      * @example
      * ```ts
      * class App extends StepLoop {}
@@ -352,6 +354,7 @@ class StepLoop {
      * class App extends StepLoop {}
      * let app: App = new App();
      * app.start()
+     * app.finish()
      * ```
      */
     public finish(): void {
