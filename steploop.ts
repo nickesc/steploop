@@ -440,6 +440,7 @@ class StepLoop {
     private _term(): void {
         this._running = false
         this._cancel_next_step();
+        this._kill = true;
 
         try {
             this.final();
