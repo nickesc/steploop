@@ -265,20 +265,16 @@ class StepLoop {
      * console.log(app.extend_lifespan(100)) // Output -> `100`
      * ```
      */
-    public extend_lifespan(steps: number | undefined = undefined): number | undefined {
+    public extend_lifespan(steps?: number ): number | undefined {
         if (!this._initialized) return undefined;
 
         if (typeof steps != "number") {
             this._lifespan = undefined;
         } else {
-            if (this._lifespan) {
-                this._lifespan = this._lifespan + steps;
+            this._lifespan = (this._lifespan || 0) + steps;
 
-                if(this._kill && (this._lifespan > this._step_num)){
-                    this._kill = false
-                }
-            } else {
-                this._lifespan = steps;
+            if(this._kill && (this._lifespan > this._step_num)){
+                this._kill = false
             }
         }
         return this._lifespan;
