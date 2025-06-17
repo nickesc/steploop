@@ -1,4 +1,6 @@
 /**
+ * Extend the {@link StepLoop} class to define your own loop.
+ *
  * The {@link StepLoop} class provides a base for a loop with steps executed at a set rate of steps-per-second.
  *
  * Executes at 60 steps-per-second by default.
@@ -27,9 +29,9 @@ class StepLoop {
     _running = false;
     _kill = false;
     /**
-     * Create a `StepLoop`.
-     * @param {number} sps - the steps-per-second of the loop
-     * @param {number} lifespan - the number of steps that are executed before the loop ends
+     * Create a `StepLoop`, with options to define the steps-per-second and the lifespan of the loop.
+     * @param {number} sps - the steps-per-second of the loop (note: values that are greater than about 250 may result in unexpected behavior); default value is 60
+     * @param {number | undefined} lifespan - the number of steps that are executed before the loop ends; setting to `undefined` will result in an unlimited lifespan; default value is `undefined`
      */
     constructor(sps = 60, lifespan = undefined) {
         this._lifespan = lifespan;
@@ -39,6 +41,8 @@ class StepLoop {
         this._timeoutId = undefined;
     }
     /**
+     * Override {@link StepLoop.initial()} to add an initial block of code to execute at the very beginning of the loop.
+     *
      * The first code executed in the {@link StepLoop}. Called once at the beginning of the {@link StepLoop} lifecycle, and then moves on to the first {@link StepLoop.background()} call in the looping stage after resolving. Executed right after {@link StepLoop.start()} is called.
      *
      * @returns {void} `void`
@@ -55,6 +59,8 @@ class StepLoop {
         return;
     }
     /**
+     * Override {@link StepLoop.background()} to add a block of code to run in the background of each step of your loop.
+     *
      * Executed in the background at the beginning of the looping stage. Called asynchronously before the rest of the loop, executes while the rest of the loop does. Starts before {@link StepLoop.before()} but may not resolve before it is called.
      *
      * @returns {Promise<void>} `Promise<void>`
@@ -71,6 +77,8 @@ class StepLoop {
         return;
     }
     /**
+     * Override {@link StepLoop.before()} to add a block of code to run before each step of your loop.
+     *
      * Executed in the looping stage before the main {@link StepLoop.step()} code. Resolves before calling {@link StepLoop.step()}. Use this function to set up anything you need before {@link StepLoop.step()} is called.
      *
      * @returns {void} `void`
@@ -87,6 +95,8 @@ class StepLoop {
         return;
     }
     /**
+     * Override {@link StepLoop.step()} to add the code for the main step of your loop.
+     *
      * The main loop code executed in the looping stage. Called after {@link StepLoop.before()} resolves, and resolves before {@link StepLoop.after()} is called. Use {@link StepLoop.step()} as the main update function of your {@link StepLoop}.
      *
      * @returns {void} `void`
@@ -103,6 +113,8 @@ class StepLoop {
         return;
     }
     /**
+     * Override {@link StepLoop.after()} to add a block of code to run after each step of your loop.
+     *
      * Executed in the looping stage after the main {@link StepLoop.step()} code. Called after {@link StepLoop.step()} resolves. Use this function to clean up anything after {@link StepLoop.step()} resolves.
      *
      * @returns {void} `void`
@@ -119,6 +131,8 @@ class StepLoop {
         return;
     }
     /**
+     * Override {@link StepLoop.final()} to add a final block of code to run at the very end of the loop.
+     *
      * The last code executed in the {@link StepLoop}, called after the looping stage is done. Executed once at the end of the {@link StepLoop} lifecycle, and then kills the loop. Called when the number of steps executed is greater than the lifespan of the {@link StepLoop} (i. e. {@link StepLoop.get_step()} `>` {@link StepLoop.get_lifespan()}) or when {@link StepLoop.finish()} is called.
      *
      * @returns {void} `void`
@@ -205,7 +219,7 @@ class StepLoop {
     /**
      * Returns the current lifespan of the {@link StepLoop} (in steps).
      *
-     * @returns {number} the current loop lifespan
+     * @returns {number | undefined} the current loop lifespan; returns `undefined` if the lifespan is unlimited
      * @example
      * ```ts
      * class App extends StepLoop {}
@@ -223,8 +237,8 @@ class StepLoop {
      *
      * If {@link StepLoop.extend_lifespan()} is called after the lifespan limit is reached, {@link StepLoop.play()} cna be called to resume executing the {@link StepLoop}. The termination stage will be executed again when the limit is reached again.
      *
-     * @param {number} steps - the target lifespan (in number of steps)
-     * @returns {number} the new lifespan
+     * @param {number} [steps] - the target lifespan (in number of steps); if `undefined` the lifespan becomes unlimited; default value is `undefined` if not provided
+     * @returns {number | undefined} the new lifespan
      * @example
      * ```ts
      * class App extends StepLoop {}
@@ -234,21 +248,16 @@ class StepLoop {
      * console.log(app.extend_lifespan(100)) // Output -> `100`
      * ```
      */
-    extend_lifespan(steps = undefined) {
+    extend_lifespan(steps) {
         if (!this._initialized)
             return undefined;
         if (typeof steps != "number") {
             this._lifespan = undefined;
         }
         else {
-            if (this._lifespan) {
-                this._lifespan = this._lifespan + steps;
-                if (this._kill && (this._lifespan > this._step_num)) {
-                    this._kill = false;
-                }
-            }
-            else {
-                this._lifespan = steps;
+            this._lifespan = (this._lifespan || 0) + steps;
+            if (this._kill && (this._lifespan > this._step_num)) {
+                this._kill = false;
             }
         }
         return this._lifespan;
@@ -320,14 +329,16 @@ class StepLoop {
      * class App extends StepLoop {}
      * let app: App = new App();
      * app.start()
+     * app.finish()
      * ```
      */
     finish() {
-        if (!this._initialized)
+        if (!this._initialized || this._kill)
             return;
         this._running = false;
         this._kill = true;
         this._cancel_next_step();
+        this._term();
     }
     _request_next_step() {
         if (!this._running)
@@ -371,45 +382,35 @@ class StepLoop {
                 this._term();
                 return;
             }
+            this.background().catch(error => {
+                console.error('Error in background():', error);
+            });
             try {
-                this.background();
+                this.before();
             }
             catch (error) {
-                console.error('Error in background():', error);
+                console.error('Error in before():', error);
             }
-            finally {
-                try {
-                    this.before();
-                }
-                catch (error) {
-                    console.error('Error in before():', error);
-                }
-                finally {
-                    try {
-                        this.step();
-                    }
-                    catch (error) {
-                        console.error('Error in step():', error);
-                    }
-                    finally {
-                        try {
-                            this.after();
-                        }
-                        catch (error) {
-                            console.error('Error in after():', error);
-                        }
-                        finally {
-                            this._step_num++;
-                            this._request_next_step();
-                        }
-                    }
-                }
+            try {
+                this.step();
             }
+            catch (error) {
+                console.error('Error in step():', error);
+            }
+            try {
+                this.after();
+            }
+            catch (error) {
+                console.error('Error in after():', error);
+            }
+            this._step_num++;
+            this._request_next_step();
         }
     }
     _term() {
         this._running = false;
         this._cancel_next_step();
+        this._kill = true;
         try {
             this.final();
         }

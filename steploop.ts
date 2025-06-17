@@ -398,32 +398,30 @@ class StepLoop {
                 return;
             }
 
-            try {
-                this.background();
-            } catch (error) {
+            this.background().catch(error => {
                 console.error('Error in background():', error);
-            } finally {
-                try {
-                    this.before();
-                } catch (error) {
-                    console.error('Error in before():', error);
-                } finally {
-                    try {
-                        this.step();
-                    } catch (error) {
-                        console.error('Error in step():', error);
-                    } finally {
-                        try {
-                            this.after();
-                        } catch (error) {
-                            console.error('Error in after():', error);
-                        } finally {
-                            this._step_num++;
-                            this._request_next_step()
-                        }
-                    }
-                }
+            });
+
+            try {
+                this.before();
+            } catch (error) {
+                console.error('Error in before():', error);
             }
+
+            try {
+                this.step();
+            } catch (error) {
+                console.error('Error in step():', error);
+            }
+
+            try {
+                this.after();
+            } catch (error) {
+                console.error('Error in after():', error);
+            }
+
+            this._step_num++;
+            this._request_next_step()
         }
     }
 
