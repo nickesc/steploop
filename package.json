@@ -19,7 +19,7 @@
     "test": "tests"
   },
   "scripts": {
-    "test": "npx tsx steploop.ts",
+    "test": "npx tsx tests/tests.ts",
     "build": "npx tsc"
   },
   "devDependencies": {
