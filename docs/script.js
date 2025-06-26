@@ -6,6 +6,7 @@ const span = document.getElementById("span")
 const lifespan = document.getElementById("lifespan")
 const sps = document.getElementById("sps")
 const setSps = document.getElementById("set-sps")
+const raf = document.getElementById("raf")
 const start = document.getElementById("start")
 const finish = document.getElementById("finish")
 const pause = document.getElementById("pause")
@@ -43,12 +44,17 @@ function testSteploop() {
     setSps.addEventListener("click", function(){
         demoLoop.set_sps(parseInt(sps.value));
     });
+
+    raf.addEventListener("click", function(){
+        demoLoop.use_raf(raf.checked);
+    });
+
     start.addEventListener("click", function(){
         if (init) {
             demoLoop.start();
         } else {
             init = true
-            demoLoop = new Demo(parseInt(sps.value), parseInt(lifespan.value));
+            demoLoop = new Demo(parseInt(sps.value), parseInt(lifespan.value), raf.checked);
             demoLoop.start();
         }
     });

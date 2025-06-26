@@ -23,7 +23,7 @@ class StepLoop {
     _lifespan;
     _sps;
     _interval;
-    _lastTime;
+    //private _lastTime: number;
     _timeoutId;
     _initialized = false;
     _running = false;
@@ -33,12 +33,13 @@ class StepLoop {
      * @param {number} sps - the steps-per-second of the loop (note: values that are greater than about 250 may result in unexpected behavior); default value is 60
      * @param {number | undefined} lifespan - the number of steps that are executed before the loop ends; setting to `undefined` will result in an unlimited lifespan; default value is `undefined`
      */
-    constructor(sps = 60, lifespan = undefined) {
+    constructor(sps = 60, lifespan = undefined, RAF = false) {
         this._lifespan = lifespan;
         this._sps = sps;
         this._interval = 1000 / this._sps;
-        this._lastTime = Date.now();
+        //this._lastTime = performance.now();
         this._timeoutId = undefined;
+        this._RAFActive = RAF;
     }
     /**
      * Override {@link StepLoop.initial()} to add an initial block of code to execute at the very beginning of the loop.
@@ -299,8 +300,8 @@ class StepLoop {
         if (!this._initialized || this._running || this._kill)
             return;
         this._running = true;
-        this._lastTime = Date.now();
-        this._run();
+        //this._lastTime = performance.now();
+        this._run(performance.now());
     }
     /**
      * Begin execution of the {@link StepLoop} lifecycle. Calls {@link StepLoop.initial()} to execute the initialization stage, then proceeds to the looping stage. The termination stage will not execute until {@link StepLoop.finish()} is called.
@@ -317,7 +318,7 @@ class StepLoop {
      */
     start() {
         this._running = true;
-        this._lastTime = Date.now();
+        //this._lastTime = performance.now();
         this._main();
     }
     /**
@@ -340,21 +341,134 @@ class StepLoop {
         this._cancel_next_step();
         this._term();
     }
-    _request_next_step() {
+    use_RAF(status) {
+        this._RAFActive = status;
+        return this._RAFActive;
+    }
+    _RAFAvailable = typeof requestAnimationFrame !== 'undefined';
+    _RAFActive;
+    _RAFId;
+    _request_next_step(timestamp) {
         if (!this._running)
             return;
+        const currentTime = performance.now();
+        // time diff between now and timestamp
+        const timeDiff = currentTime - timestamp;
+        const delay = Math.max(0, this._interval - timeDiff);
+        if (this._RAFActive && this._RAFAvailable) {
+            this._RAFId = requestAnimationFrame((timestamp) => {
+                this._run(timestamp);
+            });
+        }
+        else {
+            const correctedTimestamp = currentTime + delay;
+            this._timeoutId = setTimeout(() => {
+                this._run(correctedTimestamp);
+            }, delay);
+        }
+    }
+    /*
+    private _request_next_step(): void {
+        if (!this._running) return;
+
         const currentTime = Date.now();
         const timeDiff = currentTime - this._lastTime;
         const delay = Math.max(0, this._interval - timeDiff);
+
         this._lastTime = currentTime + delay;
+
         this._timeoutId = setTimeout(() => {
             this._run();
         }, delay);
     }
+
+    private _RAFAvailable: boolean = typeof requestAnimationFrame !== 'undefined';
+    private _RAFActive: boolean;
+    private _RAFId: number | undefined;
+
+    private _request_next_step(timestamp: DOMHighResTimeStamp | number): void {
+        if (!this._running) return;
+
+        if (this._RAFActive && this._RAFAvailable) {
+            this._RAFId = requestAnimationFrame((timestamp) => {
+                this._run(timestamp);
+            });
+        } else {
+            const currentTime = performance.now();
+            const timeDiff = currentTime - timestamp;
+            const delay = Math.max(0, this._interval - timeDiff);
+
+            this._timeoutId = setTimeout(() => {
+                this._run(currentTime);
+            }, delay);
+        }
+    }
+
+    private _idealStartTime: number = 0;
+    private _maxFrameSkip: number = 3;
+    private _performanceMode: 'precise' | 'adaptive' = 'precise';
+    private _timingStats = {
+        totalDrift: 0,
+        maxDrift: 0,
+        frameSkips: 0,
+        avgFrameTime: 0
+    };
+
+    private _request_next_step(): void {
+        if (!this._running) return;
+
+        const currentTime = performance.now();
+        const idealCurrentTime = this._idealStartTime + this._step_num * this._interval;
+        const drift = currentTime - idealCurrentTime;
+
+        // Update statistics
+        this._timingStats.totalDrift += Math.abs(drift);
+        this._timingStats.maxDrift = Math.max(this._timingStats.maxDrift, Math.abs(drift));
+
+        const framesBehind = Math.floor(drift / this._interval);
+
+        if (framesBehind > this._maxFrameSkip) {
+            this._timingStats.frameSkips++;
+            //console.warn(`Timing reset: ${framesBehind} frames behind (${drift.toFixed(2)}ms drift)`);
+            this._idealStartTime = currentTime - this._step_num * this._interval;
+            this._performanceMode = 'adaptive';
+        }
+
+        let nextTargetTime: number;
+        if (this._performanceMode === 'precise') {
+            nextTargetTime = this._idealStartTime + (this._step_num + 1) * this._interval;
+        } else {
+            const correctionFactor = Math.min(0.1, Math.abs(drift) / (this._interval * 10));
+            nextTargetTime = currentTime + this._interval - (drift * correctionFactor);
+
+            if (Math.abs(drift) < this._interval * 0.1) {
+                this._performanceMode = 'precise';
+                this._idealStartTime = currentTime - this._step_num * this._interval;
+            }
+        }
+
+        const delay = Math.max(0, nextTargetTime - currentTime);
+
+        this._timeoutId = setTimeout(() => {
+            this._run();
+        }, delay);
+    }
+
+    public getTimingStats() {
+        return {
+            ...this._timingStats,
+            avgDrift: this._step_num > 0 ? this._timingStats.totalDrift / this._step_num : 0
+        };
+    }
+    */
     _cancel_next_step() {
-        if (this._timeoutId) {
+        if (this._timeoutId && !this._RAFActive) {
             clearTimeout(this._timeoutId);
             this._timeoutId = undefined;
+        }
+        else if (this._RAFId && this._RAFActive) {
+            cancelAnimationFrame(this._RAFId);
+            this._RAFId = undefined;
         }
     }
     _check_for_end_trigger() {
@@ -376,7 +490,7 @@ class StepLoop {
             console.error('Error in initial():', error);
         }
     }
-    _run() {
+    _run(timestamp) {
         if (this._running) {
             if (this._check_for_end_trigger()) {
                 this._term();
@@ -404,7 +518,7 @@ class StepLoop {
                 console.error('Error in after():', error);
             }
             this._step_num++;
-            this._request_next_step();
+            this._request_next_step(timestamp);
         }
     }
     _term() {
@@ -420,7 +534,7 @@ class StepLoop {
     }
     _main() {
         this._init();
-        this._run();
+        this._run(performance.now());
     }
 }
 export { StepLoop };
