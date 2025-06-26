@@ -24,8 +24,9 @@ class StepLoop {
 
     private _sps: number;
     private _interval: number;
-    private _lastTime: number;
+    //private _lastTime: number;
     private _timeoutId: ReturnType<typeof setTimeout> | undefined;
+
 
     private _initialized: boolean = false;
     private _running: boolean = false;
@@ -36,13 +37,14 @@ class StepLoop {
      * @param {number} sps - the steps-per-second of the loop (note: values that are greater than about 250 may result in unexpected behavior); default value is 60
      * @param {number | undefined} lifespan - the number of steps that are executed before the loop ends; setting to `undefined` will result in an unlimited lifespan; default value is `undefined`
      */
-    constructor(sps: number = 60, lifespan: number | undefined = undefined) {
+    constructor(sps: number = 60, lifespan: number | undefined = undefined, RAF: boolean = false) {
         this._lifespan = lifespan;
 
         this._sps = sps;
         this._interval = 1000 / this._sps;
-        this._lastTime = Date.now();
+        //this._lastTime = performance.now();
         this._timeoutId = undefined;
+        this._RAFActive = RAF;
     }
 
     /**
@@ -318,8 +320,8 @@ class StepLoop {
         if (!this._initialized || this._running || this._kill) return;
 
         this._running = true;
-        this._lastTime = Date.now();
-        this._run();
+        //this._lastTime = performance.now();
+        this._run(performance.now());
     }
 
     /**
@@ -337,7 +339,7 @@ class StepLoop {
      */
     public start(): void{
         this._running = true;
-        this._lastTime = Date.now();
+        //this._lastTime = performance.now();
         this._main();
     }
 
@@ -362,6 +364,38 @@ class StepLoop {
         this._term()
     }
 
+    public use_RAF(status: boolean): boolean {
+        this._RAFActive = status;
+        return this._RAFActive;
+    }
+
+    private _RAFAvailable: boolean = typeof requestAnimationFrame !== 'undefined';
+    private _RAFActive: boolean;
+    private _RAFId: number | undefined;
+
+    private _request_next_step(timestamp: DOMHighResTimeStamp | number): void {
+        if (!this._running) return;
+
+        const currentTime = performance.now();
+
+        // time diff between now and timestamp
+        const timeDiff = currentTime - timestamp;
+        const delay = Math.max(0, this._interval - timeDiff);
+
+        if (this._RAFActive && this._RAFAvailable) {
+            this._RAFId = requestAnimationFrame((timestamp) => {
+                this._run(timestamp);
+            });
+        } else {
+            const correctedTimestamp = currentTime + delay;
+
+            this._timeoutId = setTimeout(() => {
+                this._run(correctedTimestamp);
+            }, delay);
+        }
+    }
+
+    /*
     private _request_next_step(): void {
         if (!this._running) return;
 
@@ -375,11 +409,15 @@ class StepLoop {
             this._run();
         }, delay);
     }
+    */
 
     private _cancel_next_step(): void {
-        if (this._timeoutId) {
+        if (this._timeoutId && !this._RAFActive) {
             clearTimeout(this._timeoutId);
             this._timeoutId = undefined;
+        } else if (this._RAFId && this._RAFActive) {
+            cancelAnimationFrame(this._RAFId);
+            this._RAFId = undefined;
         }
     }
 
@@ -403,7 +441,7 @@ class StepLoop {
 
     }
 
-    private _run(): void {
+    private _run(timestamp: number): void {
         if (this._running) {
             if (this._check_for_end_trigger()) {
                 this._term();
@@ -433,7 +471,7 @@ class StepLoop {
             }
 
             this._step_num++;
-            this._request_next_step()
+            this._request_next_step(timestamp)
         }
     }
 
@@ -452,7 +490,7 @@ class StepLoop {
 
     private _main(): void{
         this._init();
-        this._run();
+        this._run(performance.now());
     }
 }
 
