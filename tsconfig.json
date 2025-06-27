@@ -5,12 +5,7 @@
     "target": "esnext",
     "module": "esnext",
     "moduleResolution": "node",
-    //"allowJs": true,
     "esModuleInterop": true,
-    //"skipLibCheck": true,
-    //"resolveJsonModule": true,
-    //"moduleDetection": "force",
-    //"isolatedModules": true,
     "rewriteRelativeImportExtensions": true,
     "erasableSyntaxOnly": true,
     "verbatimModuleSyntax": true,
@@ -22,18 +17,6 @@
     "noFallthroughCasesInSwitch": true,
     //"noUnusedLocals": true,
     //"noUnusedParameters": true,
-
-
-    /* If transpiling with TypeScript: */
-
-    //"sourceMap": true,
-
-    /* AND if you're building for a library: */
-    //"declaration": true,
-
-    /* AND if you're building for a library in a monorepo: */
-    //"composite": true,
-    //"declarationMap": true,
 
     /* If your code runs in the DOM: */
     //"lib": ["es2015", "dom", "dom.iterable"]
