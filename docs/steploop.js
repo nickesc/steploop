@@ -351,116 +351,27 @@ class StepLoop {
     _request_next_step(timestamp) {
         if (!this._running)
             return;
-        const currentTime = performance.now();
-        // time diff between now and timestamp
-        const timeDiff = currentTime - timestamp;
-        const delay = Math.max(0, this._interval - timeDiff);
         if (this._RAFActive && this._RAFAvailable) {
-            this._RAFId = requestAnimationFrame((timestamp) => {
-                this._run(timestamp);
+            this._RAFId = requestAnimationFrame((nextTimestamp) => {
+                this._run(nextTimestamp);
             });
+            return;
+        }
+        const now = performance.now();
+        const elapsed = now - timestamp;
+        if (elapsed >= this._interval) {
+            this._timeoutId = setTimeout(() => {
+                this._run(performance.now());
+            }, 0);
         }
         else {
-            const correctedTimestamp = currentTime + delay;
+            const delay = this._interval - elapsed;
+            const nextIdealTimestamp = timestamp + this._interval;
             this._timeoutId = setTimeout(() => {
-                this._run(correctedTimestamp);
+                this._run(nextIdealTimestamp);
             }, delay);
         }
     }
-    /*
-    private _request_next_step(): void {
-        if (!this._running) return;
-
-        const currentTime = Date.now();
-        const timeDiff = currentTime - this._lastTime;
-        const delay = Math.max(0, this._interval - timeDiff);
-
-        this._lastTime = currentTime + delay;
-
-        this._timeoutId = setTimeout(() => {
-            this._run();
-        }, delay);
-    }
-
-    private _RAFAvailable: boolean = typeof requestAnimationFrame !== 'undefined';
-    private _RAFActive: boolean;
-    private _RAFId: number | undefined;
-
-    private _request_next_step(timestamp: DOMHighResTimeStamp | number): void {
-        if (!this._running) return;
-
-        if (this._RAFActive && this._RAFAvailable) {
-            this._RAFId = requestAnimationFrame((timestamp) => {
-                this._run(timestamp);
-            });
-        } else {
-            const currentTime = performance.now();
-            const timeDiff = currentTime - timestamp;
-            const delay = Math.max(0, this._interval - timeDiff);
-
-            this._timeoutId = setTimeout(() => {
-                this._run(currentTime);
-            }, delay);
-        }
-    }
-
-    private _idealStartTime: number = 0;
-    private _maxFrameSkip: number = 3;
-    private _performanceMode: 'precise' | 'adaptive' = 'precise';
-    private _timingStats = {
-        totalDrift: 0,
-        maxDrift: 0,
-        frameSkips: 0,
-        avgFrameTime: 0
-    };
-
-    private _request_next_step(): void {
-        if (!this._running) return;
-
-        const currentTime = performance.now();
-        const idealCurrentTime = this._idealStartTime + this._step_num * this._interval;
-        const drift = currentTime - idealCurrentTime;
-
-        // Update statistics
-        this._timingStats.totalDrift += Math.abs(drift);
-        this._timingStats.maxDrift = Math.max(this._timingStats.maxDrift, Math.abs(drift));
-
-        const framesBehind = Math.floor(drift / this._interval);
-
-        if (framesBehind > this._maxFrameSkip) {
-            this._timingStats.frameSkips++;
-            //console.warn(`Timing reset: ${framesBehind} frames behind (${drift.toFixed(2)}ms drift)`);
-            this._idealStartTime = currentTime - this._step_num * this._interval;
-            this._performanceMode = 'adaptive';
-        }
-
-        let nextTargetTime: number;
-        if (this._performanceMode === 'precise') {
-            nextTargetTime = this._idealStartTime + (this._step_num + 1) * this._interval;
-        } else {
-            const correctionFactor = Math.min(0.1, Math.abs(drift) / (this._interval * 10));
-            nextTargetTime = currentTime + this._interval - (drift * correctionFactor);
-
-            if (Math.abs(drift) < this._interval * 0.1) {
-                this._performanceMode = 'precise';
-                this._idealStartTime = currentTime - this._step_num * this._interval;
-            }
-        }
-
-        const delay = Math.max(0, nextTargetTime - currentTime);
-
-        this._timeoutId = setTimeout(() => {
-            this._run();
-        }, delay);
-    }
-
-    public getTimingStats() {
-        return {
-            ...this._timingStats,
-            avgDrift: this._step_num > 0 ? this._timingStats.totalDrift / this._step_num : 0
-        };
-    }
-    */
     _cancel_next_step() {
         if (this._timeoutId && !this._RAFActive) {
             clearTimeout(this._timeoutId);
