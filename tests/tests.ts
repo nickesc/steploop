@@ -146,7 +146,7 @@ test('SPS Control: set_sps', async () => {
 
 test('RAF Option', async () => {
     const loop = new StepLoop(60, undefined, true);
-    assert_true(loop.use_RAF(true), 'RAF should be active');
+    assert_true(loop.set_use_RAF(true), 'RAF should be active');
     loop.start();
     await sleep(50);
     assert_true(loop.is_running(), 'Should be running with RAF');

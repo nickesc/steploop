@@ -1,10 +1,13 @@
 import { StepLoop } from "./steploop.js";
 
+console.log("Beginning Test")
+
 //const new_loop = document.getElementById("new")
 const frame = document.getElementById("frame")
 const span = document.getElementById("span")
 const lifespan = document.getElementById("lifespan")
 const sps = document.getElementById("sps")
+const realSps = document.getElementById("real-sps")
 const setSps = document.getElementById("set-sps")
 const raf = document.getElementById("raf")
 const start = document.getElementById("start")
@@ -28,6 +31,7 @@ class Demo extends StepLoop {
         console.log("step", this.get_step());
         frame.innerHTML = this.get_step()
         span.innerHTML = this.get_lifespan()
+        realSps.innerHTML = Math.round(this.get_real_sps())
     }
     after() {
         console.log("after", this.get_step());
