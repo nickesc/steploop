@@ -376,40 +376,28 @@ class StepLoop {
     private _request_next_step(timestamp: DOMHighResTimeStamp | number): void {
         if (!this._running) return;
 
-        const currentTime = performance.now();
-
-        // time diff between now and timestamp
-        const timeDiff = currentTime - timestamp;
-        const delay = Math.max(0, this._interval - timeDiff);
-
         if (this._RAFActive && this._RAFAvailable) {
-            this._RAFId = requestAnimationFrame((timestamp) => {
-                this._run(timestamp);
+            this._RAFId = requestAnimationFrame((nextTimestamp) => {
+                this._run(nextTimestamp);
             });
-        } else {
-            const correctedTimestamp = currentTime + delay;
+            return;
+        }
 
+        const now = performance.now();
+        const elapsed = now - timestamp;
+
+        if (elapsed >= this._interval) {
             this._timeoutId = setTimeout(() => {
-                this._run(correctedTimestamp);
+                this._run(performance.now());
+            }, 0);
+        } else {
+            const delay = this._interval - elapsed;
+            const nextIdealTimestamp = timestamp + this._interval;
+            this._timeoutId = setTimeout(() => {
+                this._run(nextIdealTimestamp);
             }, delay);
         }
     }
-
-    /*
-    private _request_next_step(): void {
-        if (!this._running) return;
-
-        const currentTime = Date.now();
-        const timeDiff = currentTime - this._lastTime;
-        const delay = Math.max(0, this._interval - timeDiff);
-
-        this._lastTime = currentTime + delay;
-
-        this._timeoutId = setTimeout(() => {
-            this._run();
-        }, delay);
-    }
-    */
 
     private _cancel_next_step(): void {
         if (this._timeoutId && !this._RAFActive) {
