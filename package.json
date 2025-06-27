@@ -19,11 +19,12 @@
     "test": "tests"
   },
   "scripts": {
-    "test": "npx tsx tests/tests.ts",
+    "test": "vitest run",
     "build": "npx tsc"
   },
   "devDependencies": {
     "tsx": "^4.20.3",
-    "typescript": "^5.8.3"
+    "typescript": "^5.8.3",
+    "vitest": "^3.2.4"
   }
 }
