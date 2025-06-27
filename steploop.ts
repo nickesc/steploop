@@ -26,6 +26,7 @@ class StepLoop {
     private _interval: number;
     private _startTime: number = 0;
     private _lastStepTime: number = 0;
+    private _lastStepDuration: number = 0;
     private _timeoutId: ReturnType<typeof setTimeout> | undefined;
 
 
@@ -214,6 +215,26 @@ class StepLoop {
     }
 
     /**
+     * Returns the real steps-per-second (sps) based on the time between the last two steps. This value may not be accurate until after the first few steps have completed.
+     *
+     * @returns {number} the real steps-per-second (sps)
+     * @example
+     * ```ts
+     * class App extends StepLoop {}
+     * let app: App = new App();
+     * app.start()
+     *
+     * console.log(app.get_real_sps())
+     * ```
+     */
+    public get_real_sps(): number {
+        if (this._lastStepDuration === 0) {
+            return 0;
+        }
+        return 1000 / this._lastStepDuration;
+    }
+
+    /**
      * Sets the current steps-per-second (sps). Alters the speed at which the {@link StepLoop} runs: higher values will result in more steps in a faster step-speed and lower values will result in a lower step-speed. Default speed is 60 steps-per-second.
      *
      * @param {number} sps - the target steps-per-second; default value is `60`
@@ -335,6 +356,7 @@ class StepLoop {
      * ```ts
      * class App extends StepLoop {}
      * let app: App = new App();
+     *
      * app.start()
      * ```
      */
@@ -353,6 +375,7 @@ class StepLoop {
      * class App extends StepLoop {}
      * let app: App = new App();
      * app.start()
+     *
      * app.finish()
      * ```
      */
@@ -365,7 +388,21 @@ class StepLoop {
         this._term()
     }
 
-    public use_RAF(status: boolean): boolean {
+    /**
+     * Set whether or not to use {@link window.requestAnimationFrame()} for the {@link StepLoop}. When set to `true`, the loop will synchronize with the browser's rendering cycle (if the loop is running in a browser), which can result in smoother animations and better performance. When disabled, the loop will use a step-scheduler based on {@link setTimeout()}, which may be less efficient but more predictable.
+     *
+     * @param {boolean} status - `true` to use `requestAnimationFrame`, `false` to use the step scheduler.
+     * @returns {boolean} the new status of `requestAnimationFrame`
+     * @example
+     * ```ts
+     * class App extends StepLoop {}
+     * let app: App = new App();
+     *
+     * app.set_use_RAF(true)
+     * app.start()
+     * ```
+     */
+    public set_use_RAF(status: boolean): boolean {
         this._RAFActive = status;
         return this._RAFActive;
     }
@@ -453,6 +490,8 @@ class StepLoop {
             }
 
             this._step_num++;
+            this._lastStepDuration = timestamp - this._lastStepTime;
+            this._lastStepTime = timestamp;
             this._request_next_step(timestamp)
         }
     }
