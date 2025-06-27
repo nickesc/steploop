@@ -23,7 +23,8 @@ class StepLoop {
     _lifespan;
     _sps;
     _interval;
-    //private _lastTime: number;
+    _startTime = 0;
+    _lastStepTime = 0;
     _timeoutId;
     _initialized = false;
     _running = false;
@@ -300,7 +301,7 @@ class StepLoop {
         if (!this._initialized || this._running || this._kill)
             return;
         this._running = true;
-        //this._lastTime = performance.now();
+        this._startTime = performance.now() - (this._step_num * this._interval);
         this._run(performance.now());
     }
     /**
@@ -318,7 +319,7 @@ class StepLoop {
      */
     start() {
         this._running = true;
-        //this._lastTime = performance.now();
+        this._startTime = performance.now();
         this._main();
     }
     /**
@@ -358,19 +359,11 @@ class StepLoop {
             return;
         }
         const now = performance.now();
-        const elapsed = now - timestamp;
-        if (elapsed >= this._interval) {
-            this._timeoutId = setTimeout(() => {
-                this._run(performance.now());
-            }, 0);
-        }
-        else {
-            const delay = this._interval - elapsed;
-            const nextIdealTimestamp = timestamp + this._interval;
-            this._timeoutId = setTimeout(() => {
-                this._run(nextIdealTimestamp);
-            }, delay);
-        }
+        const nextStepTime = this._startTime + (this._step_num * this._interval);
+        const delay = Math.max(0, nextStepTime - now);
+        this._timeoutId = setTimeout(() => {
+            this._run(performance.now());
+        }, delay);
     }
     _cancel_next_step() {
         if (this._timeoutId && !this._RAFActive) {

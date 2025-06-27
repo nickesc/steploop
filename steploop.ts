@@ -24,7 +24,8 @@ class StepLoop {
 
     private _sps: number;
     private _interval: number;
-    //private _lastTime: number;
+    private _startTime: number = 0;
+    private _lastStepTime: number = 0;
     private _timeoutId: ReturnType<typeof setTimeout> | undefined;
 
 
@@ -320,7 +321,7 @@ class StepLoop {
         if (!this._initialized || this._running || this._kill) return;
 
         this._running = true;
-        //this._lastTime = performance.now();
+        this._startTime = performance.now() - (this._step_num * this._interval);
         this._run(performance.now());
     }
 
@@ -339,7 +340,7 @@ class StepLoop {
      */
     public start(): void{
         this._running = true;
-        //this._lastTime = performance.now();
+        this._startTime = performance.now();
         this._main();
     }
 
@@ -384,19 +385,12 @@ class StepLoop {
         }
 
         const now = performance.now();
-        const elapsed = now - timestamp;
+        const nextStepTime = this._startTime + (this._step_num * this._interval);
+        const delay = Math.max(0, nextStepTime - now);
 
-        if (elapsed >= this._interval) {
-            this._timeoutId = setTimeout(() => {
-                this._run(performance.now());
-            }, 0);
-        } else {
-            const delay = this._interval - elapsed;
-            const nextIdealTimestamp = timestamp + this._interval;
-            this._timeoutId = setTimeout(() => {
-                this._run(nextIdealTimestamp);
-            }, delay);
-        }
+        this._timeoutId = setTimeout(() => {
+            this._run(performance.now());
+        }, delay);
     }
 
     private _cancel_next_step(): void {

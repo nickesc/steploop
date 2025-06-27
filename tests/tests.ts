@@ -153,16 +153,36 @@ test('RAF Option', async () => {
     loop.finish();
 });
 
+class App extends StepLoop {
+
+    initial_time: number = 0;
+    final_time: number = -1;
+
+    public override initial(): void {
+        this.initial_time = performance.now()
+        console.log("initial",this.initial_time);
+
+    }
+
+    public override final(): void {
+        this.final_time = performance.now()
+        let execution_time = (this.final_time-this.initial_time)/1000*this.get_sps()
+        let target_time = this.get_lifespan();
+        console.log("Final", this.final_time)
+        console.log(`${execution_time} vs. ${target_time}`)
+    }
+}
+
 test('Timing Accuracy', async () => {
     const sps = 50;
     const duration_ms = 4000;
     const expected_steps = (duration_ms / 1000) * sps;
-    const tolerance = 0.02; // 2% tolerance for timing variations
+    const tolerance = 0.005; // 0.5% tolerance for timing variations
 
-    const loop = new StepLoop(sps, expected_steps + 5);
+    const loop = new App(sps, expected_steps);
     loop.start();
     await sleep(duration_ms);
-    loop.pause();
+    loop.finish();
 
     const steps = loop.get_step();
     const lower_bound = expected_steps * (1 - tolerance);
