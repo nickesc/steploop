@@ -174,7 +174,7 @@ class App extends StepLoop {
 }
 
 test('Timing Accuracy', async () => {
-    const sps = 50;
+    const sps = 500;
     const duration_ms = 4000;
     const expected_steps = (duration_ms / 1000) * sps;
     const tolerance = 0.005; // 0.5% tolerance for timing variations
@@ -191,4 +191,147 @@ test('Timing Accuracy', async () => {
     assert_true(steps >= lower_bound && steps <= upper_bound, `Steps should be within ${tolerance * 100}% of expected value`);
 
     loop.finish();
+});
+
+const wait_for_loop_to_finish = async (loop: StepLoop, timeout_ms: number) => {
+    const start = Date.now();
+    while (loop.is_running()) {
+        if (Date.now() - start > timeout_ms) {
+            console.error(`Loop did not finish in time (timeout: ${timeout_ms}ms). Forcing finish.`);
+            loop.finish();
+            break;
+        }
+        await sleep(10);
+    }
+};
+
+test('Step Execution Order and Completeness', async () => {
+    const run_test = async (sps: number, lifespan: number) => {
+        const description = `sps: ${sps}, lifespan: ${lifespan}`;
+        let steps_executed: number[] = [];
+
+        class OrderTestLoop extends StepLoop {
+            override step() {
+                const current_step = this.get_step();
+                if (steps_executed.length === 0 || steps_executed[steps_executed.length - 1] !== current_step) {
+                    steps_executed.push(current_step);
+                }
+            }
+        }
+
+        const loop = new OrderTestLoop(sps, lifespan);
+        loop.start();
+
+        const expected_duration_ms = (lifespan / sps) * 1000;
+        await wait_for_loop_to_finish(loop, expected_duration_ms + 1000);
+
+        assert_false(loop.is_running(), `Loop should have stopped. ${description}`);
+
+        for (let i = 0; i < steps_executed.length; i++) {
+            assert_eq(steps_executed[i], i, `Steps should be sequential. Expected ${i} but got ${steps_executed[i]} at index ${i}. ${description}`);
+        }
+
+        const tolerance_percent = 0.1; // 10%
+        const tolerance_steps = Math.max(5, lifespan * tolerance_percent);
+        const lower_bound = lifespan - tolerance_steps;
+        const upper_bound = lifespan + tolerance_steps;
+        const executed_count = steps_executed.length;
+
+        assert_true(
+            executed_count >= lower_bound && executed_count <= upper_bound,
+            `Executed step count (${executed_count}) should be within tolerance of lifespan (${lifespan}). Range: [${lower_bound.toFixed(2)}, ${upper_bound.toFixed(2)}]. ${description}`
+        );
+    };
+
+    await run_test(60, 100);
+    await run_test(10, 50);
+    await run_test(500, 500);
+    await run_test(1000, 100);
+    await run_test(20, 300);
+});
+
+test('Errors in step hooks do not stop the loop', async () => {
+    let before_calls = 0;
+    let step_calls = 0;
+    let after_calls = 0;
+    const error_step = 5;
+
+    class ErrorProneLoop extends StepLoop {
+        override before() {
+            before_calls++;
+            if (this.get_step() === error_step) {
+                throw new Error('Test crash in before()');
+            }
+        }
+        override step() {
+            step_calls++;
+            if (this.get_step() === error_step) {
+                throw new Error('Test crash in step()');
+            }
+        }
+        override after() {
+            after_calls++;
+            if (this.get_step() === error_step) {
+                throw new Error('Test crash in after()');
+            }
+        }
+    }
+
+    const sps = 100;
+    const lifespan = 20;
+    const loop = new ErrorProneLoop(sps, lifespan);
+
+    loop.start();
+
+    const expected_duration_ms = (lifespan / sps) * 1000;
+    await wait_for_loop_to_finish(loop, expected_duration_ms + 1000);
+
+    assert_false(loop.is_running(), 'Loop should stop after its lifespan is reached');
+
+    const final_step = loop.get_step();
+    assert_true(final_step >= lifespan, `Loop should complete its lifespan. Expected >=${lifespan}, got ${final_step}`);
+
+    assert_eq(before_calls, lifespan, `before() should have been called for every step. Expected ${lifespan}, got ${before_calls}`);
+    assert_eq(step_calls, lifespan, `step() should have been called for every step. Expected ${lifespan}, got ${step_calls}`);
+    assert_eq(after_calls, lifespan, `after() should have been called for every step. Expected ${lifespan}, got ${after_calls}`);
+});
+
+test('Step Execution Order and Completeness with RAF', async () => {
+    const sps = 60;
+    const duration_s = 2;
+    const lifespan = sps * duration_s;
+    let steps_executed: number[] = [];
+
+    class OrderTestLoopRAF extends StepLoop {
+        constructor() {
+            super(sps, lifespan, true);
+        }
+        override step() {
+            const current_step = this.get_step();
+            if (steps_executed.length === 0 || steps_executed[steps_executed.length - 1] !== current_step) {
+                steps_executed.push(current_step);
+            }
+        }
+    }
+
+    const loop = new OrderTestLoopRAF();
+    assert_true(loop.set_use_RAF(true), 'RAF should be active');
+    loop.start();
+
+    await wait_for_loop_to_finish(loop, duration_s * 1000 + 1000);
+
+    assert_false(loop.is_running(), 'Loop should have stopped (RAF)');
+
+    for (let i = 0; i < steps_executed.length; i++) {
+        assert_eq(steps_executed[i], i, `Steps should be sequential with RAF. Failed at index ${i}`);
+    }
+
+    const tolerance = 0.25; // 25%
+    const lower_bound = lifespan * (1 - tolerance);
+    const upper_bound = lifespan * (1 + tolerance);
+
+    assert_true(
+        steps_executed.length >= lower_bound && steps_executed.length <= upper_bound,
+        `Executed step count with RAF (${steps_executed.length}) should be within tolerance of expected lifespan (${lifespan})`
+    );
 });
