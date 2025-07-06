@@ -173,13 +173,7 @@ describe('StepLoop', () => {
                 expect(step).toBe(i);
             });
 
-            const tolerance_percent = 0.1; // 10%
-            const tolerance_steps = Math.max(5, lifespan * tolerance_percent);
-            const lower_bound = lifespan - tolerance_steps;
-            const upper_bound = lifespan + tolerance_steps;
-
-            expect(steps_executed.length).toBeGreaterThanOrEqual(lower_bound);
-            expect(steps_executed.length).toBeLessThanOrEqual(upper_bound);
+            expect(steps_executed.length).toBe(lifespan);
         };
 
         await run_test(60, 100);
@@ -262,11 +256,6 @@ describe('StepLoop', () => {
             expect(step).toBe(i);
         });
 
-        const tolerance = 0.25; // 25%
-        const lower_bound = lifespan * (1 - tolerance);
-        const upper_bound = lifespan * (1 + tolerance);
-
-        expect(steps_executed.length).toBeGreaterThanOrEqual(lower_bound);
-        expect(steps_executed.length).toBeLessThanOrEqual(upper_bound);
+        expect(steps_executed.length).toBe(lifespan);
     }, 0);
 });
