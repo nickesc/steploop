@@ -1,22 +1,22 @@
 <a name="module_steploop"></a>
 
 ## steploop
-Extend the [StepLoop](StepLoop) class to define your own loop.
+Extend the [StepLoop](#module_steploop.StepLoop) class to define your own loop.
 
-The [StepLoop](StepLoop) class provides a base for a loop with steps executed at a set rate of steps-per-second.
+The [StepLoop](#module_steploop.StepLoop) class provides a base for a loop with steps executed at a set rate of steps-per-second.
 
 Executes at 60 steps-per-second by default.
 
 Executes in three stages:
 
 ##### 1. Initialization Stage
-- [StepLoop.initial()](StepLoop.initial())
+- [StepLoop.initial()](#module_steploop.StepLoop+initial)
 ##### 2. Looping Stage
-1. [StepLoop.before()](StepLoop.before())
-2. [StepLoop.step()](StepLoop.step())
-3. [StepLoop.after()](StepLoop.after())
+1. [StepLoop.before()](#module_steploop.StepLoop+before)
+2. [StepLoop.step()](#module_steploop.StepLoop+step)
+3. [StepLoop.after()](#module_steploop.StepLoop+after)
 ##### 3. Termination Stage
-- [StepLoop.final()](StepLoop.final())
+- [StepLoop.final()](#module_steploop.StepLoop+final)
 
 The initialization stage and termination stage each execute once, as the first step and last step respectively. The looping stage will start after the initialization stage is done, and it will loop through its three parts until something triggers the termination stage and its lifecycle comes to an end.
 
@@ -91,9 +91,9 @@ Create a `StepLoop`, with options to define the steps-per-second and the lifespa
 <a name="module_steploop.StepLoop+initial"></a>
 
 #### stepLoop.initial() ⇒ <code>void</code>
-Override [StepLoop.initial()](StepLoop.initial()) to add an initial block of code to execute at the very beginning of the loop.
+Override [StepLoop.initial()](#module_steploop.StepLoop+initial) to add an initial block of code to execute at the very beginning of the loop.
 
-The first code executed in the [StepLoop](StepLoop). Called once at the beginning of the [StepLoop](StepLoop) lifecycle, and then moves on to the first [StepLoop.background()](StepLoop.background()) call in the looping stage after resolving. Executed right after [StepLoop.start()](StepLoop.start()) is called.
+The first code executed in the [StepLoop](#module_steploop.StepLoop). Called once at the beginning of the [StepLoop](#module_steploop.StepLoop) lifecycle, and then moves on to the first [StepLoop.background()](#module_steploop.StepLoop+background) call in the looping stage after resolving. Executed right after [StepLoop.start()](#module_steploop.StepLoop+set_sps) is called.
 
 **Kind**: instance method of [<code>StepLoop</code>](#module_steploop.StepLoop)  
 **Returns**: <code>void</code> - `void`  
@@ -108,9 +108,9 @@ class App extends StepLoop {
 <a name="module_steploop.StepLoop+background"></a>
 
 #### stepLoop.background() ⇒ <code>Promise.&lt;void&gt;</code>
-Override [StepLoop.background()](StepLoop.background()) to add a block of code to run in the background of each step of your loop.
+Override [StepLoop.background()](#module_steploop.StepLoop+background) to add a block of code to run in the background of each step of your loop.
 
-Executed in the background at the beginning of the looping stage. Called asynchronously before the rest of the loop, executes while the rest of the loop does. Starts before [StepLoop.before()](StepLoop.before()) but may not resolve before it is called.
+Executed in the background at the beginning of the looping stage. Called asynchronously before the rest of the loop, executes while the rest of the loop does. Starts before [StepLoop.before()](#module_steploop.StepLoop+before) but may not resolve before it is called.
 
 **Kind**: instance method of [<code>StepLoop</code>](#module_steploop.StepLoop)  
 **Returns**: <code>Promise.&lt;void&gt;</code> - `Promise<void>`  
@@ -125,9 +125,9 @@ class App extends StepLoop {
 <a name="module_steploop.StepLoop+before"></a>
 
 #### stepLoop.before() ⇒ <code>void</code>
-Override [StepLoop.before()](StepLoop.before()) to add a block of code to run before each step of your loop.
+Override [StepLoop.before()](#module_steploop.StepLoop+before) to add a block of code to run before each step of your loop.
 
-Executed in the looping stage before the main [StepLoop.step()](StepLoop.step()) code. Resolves before calling [StepLoop.step()](StepLoop.step()). Use this function to set up anything you need before [StepLoop.step()](StepLoop.step()) is called.
+Executed in the looping stage before the main [StepLoop.step()](#module_steploop.StepLoop+step) code. Resolves before calling [StepLoop.step()](#module_steploop.StepLoop+step). Use this function to set up anything you need before [StepLoop.step()](#module_steploop.StepLoop+step) is called.
 
 **Kind**: instance method of [<code>StepLoop</code>](#module_steploop.StepLoop)  
 **Returns**: <code>void</code> - `void`  
@@ -142,9 +142,9 @@ class App extends StepLoop {
 <a name="module_steploop.StepLoop+step"></a>
 
 #### stepLoop.step() ⇒ <code>void</code>
-Override [StepLoop.step()](StepLoop.step()) to add the code for the main step of your loop.
+Override [StepLoop.step()](#module_steploop.StepLoop+step) to add the code for the main step of your loop.
 
-The main loop code executed in the looping stage. Called after [StepLoop.before()](StepLoop.before()) resolves, and resolves before [StepLoop.after()](StepLoop.after()) is called. Use [StepLoop.step()](StepLoop.step()) as the main update function of your [StepLoop](StepLoop).
+The main loop code executed in the looping stage. Called after [StepLoop.before()](#module_steploop.StepLoop+before) resolves, and resolves before [StepLoop.after()](#module_steploop.StepLoop+after) is called. Use [StepLoop.step()](#module_steploop.StepLoop+step) as the main update function of your [StepLoop](#module_steploop.StepLoop).
 
 **Kind**: instance method of [<code>StepLoop</code>](#module_steploop.StepLoop)  
 **Returns**: <code>void</code> - `void`  
@@ -159,9 +159,9 @@ class App extends StepLoop {
 <a name="module_steploop.StepLoop+after"></a>
 
 #### stepLoop.after() ⇒ <code>void</code>
-Override [StepLoop.after()](StepLoop.after()) to add a block of code to run after each step of your loop.
+Override [StepLoop.after()](#module_steploop.StepLoop+after) to add a block of code to run after each step of your loop.
 
-Executed in the looping stage after the main [StepLoop.step()](StepLoop.step()) code. Called after [StepLoop.step()](StepLoop.step()) resolves. Use this function to clean up anything after [StepLoop.step()](StepLoop.step()) resolves.
+Executed in the looping stage after the main [StepLoop.step()](#module_steploop.StepLoop+step) code. Called after [StepLoop.step()](#module_steploop.StepLoop+step) resolves. Use this function to clean up anything after [StepLoop.step()](#module_steploop.StepLoop+step) resolves.
 
 **Kind**: instance method of [<code>StepLoop</code>](#module_steploop.StepLoop)  
 **Returns**: <code>void</code> - `void`  
@@ -176,9 +176,9 @@ class App extends StepLoop {
 <a name="module_steploop.StepLoop+final"></a>
 
 #### stepLoop.final() ⇒ <code>void</code>
-Override [StepLoop.final()](StepLoop.final()) to add a final block of code to run at the very end of the loop.
+Override [StepLoop.final()](#module_steploop.StepLoop+final) to add a final block of code to run at the very end of the loop.
 
-The last code executed in the [StepLoop](StepLoop), called after the looping stage is done. Executed once at the end of the [StepLoop](StepLoop) lifecycle, and then kills the loop. Called when the number of steps executed is greater than the lifespan of the [StepLoop](StepLoop) (i. e. [StepLoop.get_step()](StepLoop.get_step()) `>` [StepLoop.get_lifespan()](StepLoop.get_lifespan())) or when [StepLoop.finish()](StepLoop.finish()) is called.
+The last code executed in the [StepLoop](#module_steploop.StepLoop), called after the looping stage is done. Executed once at the end of the [StepLoop](#module_steploop.StepLoop) lifecycle, and then kills the loop. Called when the number of steps executed is greater than the lifespan of the [StepLoop](#module_steploop.StepLoop) (i. e. [StepLoop.get_step()](#module_steploop.StepLoop+get_step) `>` [StepLoop.get_lifespan()](#module_steploop.StepLoop+get_lifespan)) or when [StepLoop.finish()](#module_steploop.StepLoop+finish) is called.
 
 **Kind**: instance method of [<code>StepLoop</code>](#module_steploop.StepLoop)  
 **Returns**: <code>void</code> - `void`  
@@ -193,9 +193,9 @@ class App extends StepLoop {
 <a name="module_steploop.StepLoop+on_pause"></a>
 
 #### stepLoop.on\_pause() ⇒ <code>void</code>
-Override [StepLoop.on_pause()](StepLoop.on_pause()) to add a block of code to execute immediately after calling [StepLoop.pause()](StepLoop.pause()).
+Override [StepLoop.on_pause()](#module_steploop.StepLoop+on_pause) to add a block of code to execute immediately after calling [StepLoop.pause()](#module_steploop.StepLoop+pause).
 
-Called only when the [StepLoop](StepLoop) is paused, then stops executing until [StepLoop.play()](StepLoop.play()) is called.
+Called only when the [StepLoop](#module_steploop.StepLoop) is paused, then stops executing until [StepLoop.play()](#module_steploop.StepLoop+play) is called.
 
 **Kind**: instance method of [<code>StepLoop</code>](#module_steploop.StepLoop)  
 **Returns**: <code>void</code> - `void`  
@@ -210,9 +210,9 @@ class App extends StepLoop {
 <a name="module_steploop.StepLoop+on_play"></a>
 
 #### stepLoop.on\_play() ⇒ <code>void</code>
-Override [StepLoop.on_play()](StepLoop.on_play()) to add a block of code to execute immediately after calling [StepLoop.play()](StepLoop.play()).
+Override [StepLoop.on_play()](#module_steploop.StepLoop+on_play) to add a block of code to execute immediately after calling [StepLoop.play()](#module_steploop.StepLoop+play).
 
-Called only when the [StepLoop](StepLoop) is played, then proceeds with the rest of the loop.
+Called only when the [StepLoop](#module_steploop.StepLoop) is played, then proceeds with the rest of the loop.
 
 **Kind**: instance method of [<code>StepLoop</code>](#module_steploop.StepLoop)  
 **Returns**: <code>void</code> - `void`  
@@ -227,7 +227,7 @@ class App extends StepLoop {
 <a name="module_steploop.StepLoop+is_running"></a>
 
 #### stepLoop.is\_running() ⇒ <code>boolean</code>
-Returns `true` if the [StepLoop](StepLoop) is running and false otherwise.
+Returns `true` if the [StepLoop](#module_steploop.StepLoop) is running and false otherwise.
 
 **Kind**: instance method of [<code>StepLoop</code>](#module_steploop.StepLoop)  
 **Returns**: <code>boolean</code> - `true` if the loop is currently running  
@@ -242,7 +242,7 @@ console.log(app.is_running()) // Output -> `true`
 <a name="module_steploop.StepLoop+is_paused"></a>
 
 #### stepLoop.is\_paused() ⇒ <code>boolean</code>
-Returns `true` if the [StepLoop](StepLoop) is paused and false otherwise.
+Returns `true` if the [StepLoop](#module_steploop.StepLoop) is paused and false otherwise.
 
 **Kind**: instance method of [<code>StepLoop</code>](#module_steploop.StepLoop)  
 **Returns**: <code>boolean</code> - `true` if the loop is currently paused  
@@ -302,7 +302,7 @@ console.log(app.get_real_sps())
 <a name="module_steploop.StepLoop+get_lifespan"></a>
 
 #### stepLoop.get\_lifespan() ⇒ <code>number</code> \| <code>undefined</code>
-Returns the current lifespan of the [StepLoop](StepLoop) (in steps).
+Returns the current lifespan of the [StepLoop](#module_steploop.StepLoop) (in steps).
 
 **Kind**: instance method of [<code>StepLoop</code>](#module_steploop.StepLoop)  
 **Returns**: <code>number</code> \| <code>undefined</code> - the current loop lifespan; returns `undefined` if the lifespan is unlimited  
@@ -317,7 +317,7 @@ console.log(app.get_lifespan()) // Output -> `500`
 <a name="module_steploop.StepLoop+set_sps"></a>
 
 #### stepLoop.set\_sps(sps) ⇒ <code>number</code>
-Sets the current steps-per-second (sps). Alters the speed at which the [StepLoop](StepLoop) runs: higher values will result in more steps in a faster step-speed and lower values will result in a lower step-speed. Default speed is 60 steps-per-second.
+Sets the current steps-per-second (sps). Alters the speed at which the [StepLoop](#module_steploop.StepLoop) runs: higher values will result in more steps in a faster step-speed and lower values will result in a lower step-speed. Default speed is 60 steps-per-second.
 
 **Kind**: instance method of [<code>StepLoop</code>](#module_steploop.StepLoop)  
 **Returns**: <code>number</code> - the new steps-per-second  
@@ -337,7 +337,7 @@ console.log(app.set_sps(120)) // Output -> `120`
 <a name="module_steploop.StepLoop+set_use_RAF"></a>
 
 #### stepLoop.set\_use\_RAF(status) ⇒ <code>boolean</code>
-Set whether or not to use [window.requestAnimationFrame()](window.requestAnimationFrame()) for the [StepLoop](StepLoop). When set to `true`, the loop will synchronize with the browser's rendering cycle (if the loop is running in a browser), which can result in smoother animations and better performance. When disabled, the loop will use a step-scheduler based on [setTimeout()](setTimeout()), which may be less efficient but more predictable.
+Set whether or not to use [window.requestAnimationFrame()](https://developer.mozilla.org/en-US/docs/Web/API/Window/requestAnimationFrame) for the [StepLoop](#module_steploop.StepLoop). When set to `true`, the loop will synchronize with the browser's rendering cycle (if the loop is running in a browser), which can result in smoother animations and better performance. When disabled, the loop will use a step-scheduler based on [setTimeout()](https://developer.mozilla.org/en-US/docs/Web/API/Window/setTimeout), which may be less efficient but more predictable.
 
 **Kind**: instance method of [<code>StepLoop</code>](#module_steploop.StepLoop)  
 **Returns**: <code>boolean</code> - the new status of `requestAnimationFrame`  
@@ -357,9 +357,9 @@ app.start()
 <a name="module_steploop.StepLoop+extend_lifespan"></a>
 
 #### stepLoop.extend\_lifespan([steps]) ⇒ <code>number</code> \| <code>undefined</code>
-Extend (or reduce) the lifespan of the [StepLoop](StepLoop). Adds the specified number of steps to the current lifespan, or removes the limit on the [StepLoop](StepLoop)'s lifespan (will run until [StepLoop.finish()](StepLoop.finish()) is called).
+Extend (or reduce) the lifespan of the [StepLoop](#module_steploop.StepLoop). Adds the specified number of steps to the current lifespan, or removes the limit on the [StepLoop](#module_steploop.StepLoop)'s lifespan (will run until [StepLoop.finish()](#module_steploop.StepLoop+finish) is called).
 
-If [StepLoop.extend_lifespan()](StepLoop.extend_lifespan()) is called after the lifespan limit is reached, [StepLoop.play()](StepLoop.play()) can be called to resume executing the [StepLoop](StepLoop). The termination stage will be executed again when the limit is reached again.
+If [StepLoop.extend_lifespan()](#module_steploop.StepLoop+extend_lifespan) is called after the lifespan limit is reached, [StepLoop.play()](#module_steploop.StepLoop+play) can be called to resume executing the [StepLoop](#module_steploop.StepLoop). The termination stage will be executed again when the limit is reached again.
 
 **Kind**: instance method of [<code>StepLoop</code>](#module_steploop.StepLoop)  
 **Returns**: <code>number</code> \| <code>undefined</code> - the new lifespan  
@@ -379,7 +379,7 @@ console.log(app.extend_lifespan(100)) // Output -> `100`
 <a name="module_steploop.StepLoop+pause"></a>
 
 #### stepLoop.pause() ⇒ <code>void</code>
-Pause the execution of the [StepLoop](StepLoop) after the current step resolves. Steps will not advance and the current step ([StepLoop.get_step()](StepLoop.get_step())) will not increase while the [StepLoop](StepLoop) is paused. Use [StepLoop.play()](StepLoop.play()) to resume execution and continue the loop.
+Pause the execution of the [StepLoop](#module_steploop.StepLoop) after the current step resolves. Steps will not advance and the current step ([StepLoop.get_step()](#module_steploop.StepLoop+get_step)) will not increase while the [StepLoop](#module_steploop.StepLoop) is paused. Use [StepLoop.play()](#module_steploop.StepLoop+play) to resume execution and continue the loop.
 
 **Kind**: instance method of [<code>StepLoop</code>](#module_steploop.StepLoop)  
 **Returns**: <code>void</code> - `void`  
@@ -394,7 +394,7 @@ app.pause()
 <a name="module_steploop.StepLoop+play"></a>
 
 #### stepLoop.play() ⇒ <code>void</code>
-Resume execution of the [StepLoop](StepLoop) after calling [StepLoop.pause()](StepLoop.pause()) to pause it. Will resume execution on the next step in the [StepLoop](StepLoop) lifespan. Use [StepLoop.pause()](StepLoop.pause()) to pause execution and stop the loop.
+Resume execution of the [StepLoop](#module_steploop.StepLoop) after calling [StepLoop.pause()](#module_steploop.StepLoop+pause) to pause it. Will resume execution on the next step in the [StepLoop](#module_steploop.StepLoop) lifespan. Use [StepLoop.pause()](#module_steploop.StepLoop+pause) to pause execution and stop the loop.
 
 **Kind**: instance method of [<code>StepLoop</code>](#module_steploop.StepLoop)  
 **Returns**: <code>void</code> - `void`  
@@ -410,9 +410,9 @@ app.play()
 <a name="module_steploop.StepLoop+start"></a>
 
 #### stepLoop.start() ⇒ <code>void</code>
-Begin execution of the [StepLoop](StepLoop) lifecycle. Calls [StepLoop.initial()](StepLoop.initial()) to execute the initialization stage, then proceeds to the looping stage. The termination stage will not execute until [StepLoop.finish()](StepLoop.finish()) is called.
+Begin execution of the [StepLoop](#module_steploop.StepLoop) lifecycle. Calls [StepLoop.initial()](#module_steploop.StepLoop+initial) to execute the initialization stage, then proceeds to the looping stage. The termination stage will not execute until [StepLoop.finish()](#module_steploop.StepLoop+finish) is called.
 
-If [StepLoop.start()](StepLoop.start()) is called after the termination stage has ended, the loop will restart at the beginning of the initialization stage.
+If [StepLoop.start()](#module_steploop.StepLoop+set_sps) is called after the termination stage has ended, the loop will restart at the beginning of the initialization stage.
 
 **Kind**: instance method of [<code>StepLoop</code>](#module_steploop.StepLoop)  
 **Returns**: <code>void</code> - `void`  
@@ -426,7 +426,7 @@ app.start()
 <a name="module_steploop.StepLoop+finish"></a>
 
 #### stepLoop.finish() ⇒ <code>void</code>
-Ends the [StepLoop](StepLoop). Executes the termination stage of the [StepLoop](StepLoop) lifecycle. Calls [StepLoop.final()](StepLoop.final()) and then kills the loop.
+Ends the [StepLoop](#module_steploop.StepLoop). Executes the termination stage of the [StepLoop](#module_steploop.StepLoop) lifecycle. Calls [StepLoop.final()](#module_steploop.StepLoop+final) and then kills the loop.
 
 **Kind**: instance method of [<code>StepLoop</code>](#module_steploop.StepLoop)  
 **Returns**: <code>void</code> - `void`  
