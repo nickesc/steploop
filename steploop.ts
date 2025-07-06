@@ -1,5 +1,5 @@
 /**
- * Extend the {@link StepLoop} class to define your own loop.
+ * @fileoverview Extend the {@link StepLoop} class to define your own loop.
  *
  * The {@link StepLoop} class provides a base for a loop with steps executed at a set rate of steps-per-second.
  *
@@ -18,11 +18,13 @@
  *
  * The initialization stage and termination stage each execute once, as the first step and last step respectively. The looping stage will start after the initialization stage is done, and it will loop through its three parts until something triggers the termination stage and its lifecycle comes to an end.
  *
- * @module StepLoop
+ * @module steploop
  */
 
 /**
  * A `StepLoop`.
+ * @class
+ * @static
  */
 export class StepLoop {
     private _step_num: number = 0;
@@ -228,6 +230,7 @@ export class StepLoop {
      *
      * console.log(app.is_running()) // Output -> `true`
      * ```
+     * @instance
      */
     public is_running(): boolean {
         return this._running;
@@ -245,6 +248,7 @@ export class StepLoop {
      *
      * console.log(app.is_paused()) // Output -> `false`
      * ```
+     * @instance
      */
     public is_paused(): boolean {
         return this._paused;
@@ -262,6 +266,7 @@ export class StepLoop {
      *
      * console.log(app.get_step()) // Output -> `1`
      * ```
+     * @instance
      */
     public get_step(): number {
         return this._step_num;
@@ -279,6 +284,7 @@ export class StepLoop {
      *
      * console.log(app.get_sps()) // Output -> `60`
      * ```
+     * @instance
      */
     public get_sps(): number {
         return this._sps;
@@ -296,6 +302,7 @@ export class StepLoop {
      *
      * console.log(app.get_real_sps())
      * ```
+     * @instance
      */
     public get_real_sps(): number {
         if (this._lastStepDuration === 0) {
@@ -317,6 +324,7 @@ export class StepLoop {
      *
      * console.log(app.set_sps(120)) // Output -> `120`
      * ```
+     * @instance
      */
     public set_sps(sps: number): number {
         //if (this._initialized) return this._sps;;
@@ -338,6 +346,7 @@ export class StepLoop {
      *
      * console.log(app.get_lifespan()) // Output -> `500`
      * ```
+     * @instance
      */
     public get_lifespan(): number | undefined {
         return this._lifespan;
@@ -358,6 +367,7 @@ export class StepLoop {
      *
      * console.log(app.extend_lifespan(100)) // Output -> `100`
      * ```
+     * @instance
      */
     public extend_lifespan(steps?: number ): number | undefined {
         if (!this._initialized) return undefined;
@@ -386,6 +396,7 @@ export class StepLoop {
      *
      * app.pause()
      * ```
+     * @instance
      */
     public pause(): void {
         if (!this._initialized || !this._running || this._kill) return;
@@ -409,6 +420,7 @@ export class StepLoop {
      * app.pause()
      * app.play()
      * ```
+     * @instance
      */
     public play(): void {
         if (!this._initialized || this._running || this._kill) return;
@@ -433,6 +445,7 @@ export class StepLoop {
      *
      * app.start()
      * ```
+     * @instance
      */
     public start(): void{
         this._running = true;
@@ -452,6 +465,7 @@ export class StepLoop {
      *
      * app.finish()
      * ```
+     * @instance
      */
     public finish(): void {
         if (!this._initialized || this._kill) return;
@@ -476,6 +490,7 @@ export class StepLoop {
      * app.set_use_RAF(true)
      * app.start()
      * ```
+     * @instance
      */
     public set_use_RAF(status: boolean): boolean {
         this._RAFActive = status;
