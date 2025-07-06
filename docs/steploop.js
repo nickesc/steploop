@@ -171,6 +171,24 @@ class StepLoop {
         return;
     }
     /**
+     * Override {@link StepLoop.on_play()} to add a block of code to execute immediately after calling {@link StepLoop.play()}.
+     *
+     * Called only when the {@link StepLoop} is played, then proceeds with the rest of the loop.
+     *
+     * @returns {void} `void`
+     * @example
+     * ```ts
+     * class App extends StepLoop {
+     *     public override on_play(): void {
+     *         console.log(`played`);
+     *     }
+     * }
+     * ```
+     */
+    on_play() {
+        return;
+    }
+    /**
      * Returns `true` if the {@link StepLoop} is running and false otherwise.
      *
      * @returns {boolean} `true` if the loop is currently running
@@ -360,6 +378,7 @@ class StepLoop {
         this._running = true;
         this._paused = false;
         this._startTime = performance.now() - (this._step_num * this._interval);
+        this.on_play();
         this._run(performance.now());
     }
     /**
