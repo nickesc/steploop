@@ -44,16 +44,20 @@ class Demo extends StepLoop {
         } else {
             this.left = 20
         }
-        if (this.is_paused()){
-            box.backgroundColor = "blue"
-        } else {
-            box.style.backgroundColor = "orange"
-        }
         box.style.left = `${this.left}px`
     }
     after() {
         console.log("after", this.get_step());
     }
+
+    on_pause(){
+        box.style.backgroundColor="#00bfff"
+    }
+
+    on_play(){
+        box.style.backgroundColor="orange"
+    }
+
     final() {
         //console.log("final", this.step_num);
         box.style.backgroundColor = "grey"
