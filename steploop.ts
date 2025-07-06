@@ -312,6 +312,24 @@ export class StepLoop {
     }
 
     /**
+     * Returns the current lifespan of the {@link StepLoop} (in steps).
+     *
+     * @returns {number | undefined} the current loop lifespan; returns `undefined` if the lifespan is unlimited
+     * @example
+     * ```ts
+     * class App extends StepLoop {}
+     * let app: App = new App(500);
+     * app.start()
+     *
+     * console.log(app.get_lifespan()) // Output -> `500`
+     * ```
+     * @instance
+     */
+    public get_lifespan(): number | undefined {
+        return this._lifespan;
+    }
+
+    /**
      * Sets the current steps-per-second (sps). Alters the speed at which the {@link StepLoop} runs: higher values will result in more steps in a faster step-speed and lower values will result in a lower step-speed. Default speed is 60 steps-per-second.
      *
      * @param {number} sps - the target steps-per-second; default value is `60`
@@ -335,21 +353,23 @@ export class StepLoop {
     }
 
     /**
-     * Returns the current lifespan of the {@link StepLoop} (in steps).
+     * Set whether or not to use {@link window.requestAnimationFrame()} for the {@link StepLoop}. When set to `true`, the loop will synchronize with the browser's rendering cycle (if the loop is running in a browser), which can result in smoother animations and better performance. When disabled, the loop will use a step-scheduler based on {@link setTimeout()}, which may be less efficient but more predictable.
      *
-     * @returns {number | undefined} the current loop lifespan; returns `undefined` if the lifespan is unlimited
+     * @param {boolean} status - `true` to use `requestAnimationFrame`, `false` to use the step scheduler.
+     * @returns {boolean} the new status of `requestAnimationFrame`
      * @example
      * ```ts
      * class App extends StepLoop {}
-     * let app: App = new App(500);
-     * app.start()
+     * let app: App = new App();
      *
-     * console.log(app.get_lifespan()) // Output -> `500`
+     * app.set_use_RAF(true)
+     * app.start()
      * ```
      * @instance
      */
-    public get_lifespan(): number | undefined {
-        return this._lifespan;
+    public set_use_RAF(status: boolean): boolean {
+        this._RAFActive = status;
+        return this._RAFActive;
     }
 
     /**
@@ -477,25 +497,7 @@ export class StepLoop {
         this._term()
     }
 
-    /**
-     * Set whether or not to use {@link window.requestAnimationFrame()} for the {@link StepLoop}. When set to `true`, the loop will synchronize with the browser's rendering cycle (if the loop is running in a browser), which can result in smoother animations and better performance. When disabled, the loop will use a step-scheduler based on {@link setTimeout()}, which may be less efficient but more predictable.
-     *
-     * @param {boolean} status - `true` to use `requestAnimationFrame`, `false` to use the step scheduler.
-     * @returns {boolean} the new status of `requestAnimationFrame`
-     * @example
-     * ```ts
-     * class App extends StepLoop {}
-     * let app: App = new App();
-     *
-     * app.set_use_RAF(true)
-     * app.start()
-     * ```
-     * @instance
-     */
-    public set_use_RAF(status: boolean): boolean {
-        this._RAFActive = status;
-        return this._RAFActive;
-    }
+
 
     private _RAFAvailable: boolean = typeof requestAnimationFrame !== 'undefined';
     private _RAFActive: boolean;
