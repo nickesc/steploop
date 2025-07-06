@@ -1,7 +1,7 @@
 <h3 align="center" >
   <div>
     <a href="https://github.com/nickesc/steploop"><img alt="Source: Github" src="https://img.shields.io/badge/source-github-brightgreen?style=for-the-badge&logo=github&labelColor=%23505050"></a>
-    <a href="https://github.com/nickesc/steploop/actions/workflows/node.js.yml"><img alt="Tests: github.com/nickesc/steploop/actions/workflows/node.js.yml" src="https://img.shields.io/github/actions/workflow/status/nickesc/steploop/test.yml?logo=github&label=tests&logoColor=white&style=for-the-badge&labelColor=%23505050"></a>
+    <a href="https://github.com/nickesc/steploop/actions/workflows/node.js.yml"><img alt="Tests: github.com/nickesc/steploop/actions/workflows/node.js.yml" src="https://img.shields.io/github/actions/workflow/status/nickesc/steploop/steploop-ts-tests.yml?logo=github&label=tests&logoColor=white&style=for-the-badge&labelColor=%23505050"></a>
     <br>
     <a href="https://www.npmjs.com/package/steploop"><img alt="NPM: npmjs.com/package/steploop" src="https://img.shields.io/npm/v/steploop?style=for-the-badge&logo=npm&logoColor=white&label=npm&color=%23C12127&labelColor=%23505050"></a>
   </div>
@@ -34,7 +34,7 @@
 Install `steploop` via NPM:
 
 ```sh
-$ npm i steploop
+$ npm i steploop  ## not published yet
 ```
 
 ### Basic Usage

@@ -14,14 +14,17 @@
   "license": "MIT",
   "author": "N. Escobar <nick@nescobar.media> (https://nickesc.github.io/)",
   "type": "module",
-  "main": "steploop.ts",
+  "main": "build/steploop.js",
+  "types": "build/steploop.d.ts",
   "directories": {
     "test": "tests"
   },
   "scripts": {
     "test": "vitest run",
-    "build": "npx tsc -p tsconfig.build.json"
+    "docs":"cp build/steploop.js docs/",
+    "build": "npx tsc -p tsconfig.build.json && npm run docs"
   },
+  "files": ["build/**/*"],
   "devDependencies": {
     "tsx": "^4.20.3",
     "typescript": "^5.8.3",

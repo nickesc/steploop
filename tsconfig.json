@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     /* Base Options: */
-    "outDir": "docs",
+    "outDir": "build",
     "target": "esnext",
     "module": "esnext",
     "moduleResolution": "node",
@@ -9,7 +9,7 @@
     "rewriteRelativeImportExtensions": true,
     "erasableSyntaxOnly": true,
     "verbatimModuleSyntax": true,
-
+    "declaration": true,
     /* Type Checking */
     "strict": true,
     "noUncheckedIndexedAccess": true,
