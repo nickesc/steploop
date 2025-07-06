@@ -17,8 +17,14 @@
  * - {@link StepLoop.final()}
  *
  * The initialization stage and termination stage each execute once, as the first step and last step respectively. The looping stage will start after the initialization stage is done, and it will loop through its three parts until something triggers the termination stage and its lifecycle comes to an end.
+ *
+ * @module StepLoop
  */
-class StepLoop {
+
+/**
+ * A `StepLoop`.
+ */
+export class StepLoop {
     private _step_num: number = 0;
     private _lifespan: number | undefined;
 
@@ -64,6 +70,7 @@ class StepLoop {
      *     }
      * }
      * ```
+     * @instance
      */
     public initial(): void {
         return;
@@ -83,6 +90,7 @@ class StepLoop {
      *     }
      * }
      * ```
+     * @instance
      */
     public async background(): Promise<void> {
         return;
@@ -102,6 +110,7 @@ class StepLoop {
      *     }
      * }
      * ```
+     * @instance
      */
     public before(): void {
         return;
@@ -121,6 +130,7 @@ class StepLoop {
      *     }
      * }
      * ```
+     * @instance
      */
     public step(): void {
         return;
@@ -140,6 +150,7 @@ class StepLoop {
      *     }
      * }
      * ```
+     * @instance
      */
     public after(): void {
         return;
@@ -159,6 +170,7 @@ class StepLoop {
      *     }
      * }
      * ```
+     * @instance
      */
     public final(): void {
         return;
@@ -178,6 +190,7 @@ class StepLoop {
      *     }
      * }
      * ```
+     * @instance
      */
     public on_pause(): void {
         return;
@@ -197,6 +210,7 @@ class StepLoop {
      *     }
      * }
      * ```
+     * @instance
      */
     public on_play(): void {
         return;
@@ -576,5 +590,3 @@ class StepLoop {
         this._run(performance.now());
     }
 }
-
-export { StepLoop };
