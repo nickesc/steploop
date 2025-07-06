@@ -17,8 +17,15 @@ const play = document.getElementById("play")
 const extension = document.getElementById("extension")
 const extend = document.getElementById("extend")
 
+const box = document.getElementById("box")
+
 class Demo extends StepLoop {
+
+    left = 20
+
     initial() {
+        this.left = 20;
+        box.style.backgroundColor = "orange"
         console.log("initial", Date.now());
     }
     async background() {
@@ -32,12 +39,19 @@ class Demo extends StepLoop {
         frame.innerHTML = this.get_step()
         span.innerHTML = this.get_lifespan()
         realSps.innerHTML = Math.round(this.get_real_sps())
+        if (this.left+1 <= window.innerWidth-120 ) {
+            this.left = this.left+1
+        } else {
+            this.left = 20
+        }
+        box.style.left = `${this.left}px`
     }
     after() {
         console.log("after", this.get_step());
     }
     final() {
         //console.log("final", this.step_num);
+        box.style.backgroundColor = "grey"
         console.log("final", Date.now())
     }
 }

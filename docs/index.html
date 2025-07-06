@@ -2,6 +2,37 @@
 <html>
   <head>
     <title>steploop Demo</title>
+    <style>
+        html {
+            box-sizing: border-box;
+            max-width: 70ch;
+            margin: auto;
+            font-size: 1.25em;
+            color: #333;
+            line-height: 1.4;
+        }
+
+        * {
+            box-sizing: inherit;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            font-family: sans-serif;
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+        }
+
+        a:link {
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
   </head>
   <body>
     <div>
@@ -40,6 +71,29 @@
                 <label for="extension">Extension</label><input type="text" name="extension" id="extension" value="500">
                 <button id="extend">Extend</button>
             </div>
+            <div id="container">
+
+            </div>
+            <div id="box">
+
+            </div>
+            <style>
+                #box, #container {
+                    position: absolute;
+                    width: 100px;
+                    height: 100px;
+                    left: 20px;
+                    top: 50vh;
+                    background-color: grey;
+                }
+
+                #container {
+                    width: calc(100vw - 40px);
+                    background-color: transparent;
+                    outline: #333 4px solid;
+                    outline-offset: 8px;
+                }
+            </style>
         </div>
     </div>
 
