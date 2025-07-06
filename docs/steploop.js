@@ -29,6 +29,7 @@ class StepLoop {
     _timeoutId;
     _initialized = false;
     _running = false;
+    _paused = false;
     _kill = false;
     /**
      * Create a `StepLoop`, with options to define the steps-per-second and the lifespan of the loop.
@@ -152,6 +153,24 @@ class StepLoop {
         return;
     }
     /**
+     * Override {@link StepLoop.on_pause()} to add a block of code to execute immediately after calling {@link StepLoop.pause()}.
+     *
+     * Called only when the {@link StepLoop} is paused, then stops executing until {@link StepLoop.play()} is called.
+     *
+     * @returns {void} `void`
+     * @example
+     * ```ts
+     * class App extends StepLoop {
+     *     public override on_pause(): void {
+     *         console.log(`paused`);
+     *     }
+     * }
+     * ```
+     */
+    on_pause() {
+        return;
+    }
+    /**
      * Returns `true` if the {@link StepLoop} is running and false otherwise.
      *
      * @returns {boolean} `true` if the loop is currently running
@@ -166,6 +185,22 @@ class StepLoop {
      */
     is_running() {
         return this._running;
+    }
+    /**
+     * Returns `true` if the {@link StepLoop} is paused and false otherwise.
+     *
+     * @returns {boolean} `true` if the loop is currently paused
+     * @example
+     * ```ts
+     * class App extends StepLoop {}
+     * let app: App = new App();
+     * app.start()
+     *
+     * console.log(app.is_paused()) // Output -> `false`
+     * ```
+     */
+    is_paused() {
+        return this._paused;
     }
     /**
      * Returns the current step number (the number of times the loop has run).
@@ -301,7 +336,9 @@ class StepLoop {
         if (!this._initialized || !this._running || this._kill)
             return;
         this._running = false;
+        this._paused = true;
         this._cancel_next_step();
+        this.on_pause();
     }
     /**
      * Resume execution of the {@link StepLoop} after calling {@link StepLoop.pause()} to pause it. Will resume execution on the next step in the {@link StepLoop} lifespan. Use {@link StepLoop.pause()} to pause execution and stop the loop.
@@ -321,6 +358,7 @@ class StepLoop {
         if (!this._initialized || this._running || this._kill)
             return;
         this._running = true;
+        this._paused = false;
         this._startTime = performance.now() - (this._step_num * this._interval);
         this._run(performance.now());
     }
@@ -360,6 +398,7 @@ class StepLoop {
         if (!this._initialized || this._kill)
             return;
         this._running = false;
+        this._paused = false;
         this._kill = true;
         this._cancel_next_step();
         this._term();
@@ -465,6 +504,7 @@ class StepLoop {
     }
     _term() {
         this._running = false;
+        this._paused = false;
         this._cancel_next_step();
         this._kill = true;
         try {
