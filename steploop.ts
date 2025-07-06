@@ -32,6 +32,7 @@ class StepLoop {
 
     private _initialized: boolean = false;
     private _running: boolean = false;
+    private _paused: boolean = false;
     private _kill: boolean = false;
 
     /**
@@ -164,6 +165,44 @@ class StepLoop {
     }
 
     /**
+     * Override {@link StepLoop.on_pause()} to add a block of code to execute immediately after calling {@link StepLoop.pause()}.
+     *
+     * Called only when the {@link StepLoop} is paused, then stops executing until {@link StepLoop.play()} is called.
+     *
+     * @returns {void} `void`
+     * @example
+     * ```ts
+     * class App extends StepLoop {
+     *     public override on_pause(): void {
+     *         console.log(`paused`);
+     *     }
+     * }
+     * ```
+     */
+    public on_pause(): void {
+        return;
+    }
+
+    /**
+     * Override {@link StepLoop.on_play()} to add a block of code to execute immediately after calling {@link StepLoop.play()}.
+     *
+     * Called only when the {@link StepLoop} is played, then proceeds with the rest of the loop.
+     *
+     * @returns {void} `void`
+     * @example
+     * ```ts
+     * class App extends StepLoop {
+     *     public override on_play(): void {
+     *         console.log(`played`);
+     *     }
+     * }
+     * ```
+     */
+    public on_play(): void {
+        return;
+    }
+
+    /**
      * Returns `true` if the {@link StepLoop} is running and false otherwise.
      *
      * @returns {boolean} `true` if the loop is currently running
@@ -178,6 +217,23 @@ class StepLoop {
      */
     public is_running(): boolean {
         return this._running;
+    }
+
+    /**
+     * Returns `true` if the {@link StepLoop} is paused and false otherwise.
+     *
+     * @returns {boolean} `true` if the loop is currently paused
+     * @example
+     * ```ts
+     * class App extends StepLoop {}
+     * let app: App = new App();
+     * app.start()
+     *
+     * console.log(app.is_paused()) // Output -> `false`
+     * ```
+     */
+    public is_paused(): boolean {
+        return this._paused;
     }
 
     /**
@@ -321,7 +377,9 @@ class StepLoop {
         if (!this._initialized || !this._running || this._kill) return;
 
         this._running = false;
+        this._paused = true;
         this._cancel_next_step();
+        this.on_pause()
     }
 
     /**
@@ -342,7 +400,9 @@ class StepLoop {
         if (!this._initialized || this._running || this._kill) return;
 
         this._running = true;
+        this._paused = false;
         this._startTime = performance.now() - (this._step_num * this._interval);
+        this.on_play();
         this._run(performance.now());
     }
 
@@ -383,6 +443,7 @@ class StepLoop {
         if (!this._initialized || this._kill) return;
 
         this._running = false;
+        this._paused = false;
         this._kill = true;
         this._cancel_next_step();
         this._term()
@@ -498,6 +559,7 @@ class StepLoop {
 
     private _term(): void {
         this._running = false
+        this._paused = false;
         this._cancel_next_step();
         this._kill = true;
 
