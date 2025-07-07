@@ -6,7 +6,7 @@
     <a href="https://www.npmjs.com/package/steploop"><img alt="NPM: npmjs.com/package/steploop" src="https://img.shields.io/npm/v/steploop?style=for-the-badge&logo=npm&logoColor=white&label=npm&color=%23C12127&labelColor=%23505050"></a>
   </div>
   <br>
-  <img src="./icon.svg" width="150px">
+  <img src="./docs/icon.svg" width="150px">
   <h3 align="center">
     <code>steploop</code>
   </h3>
