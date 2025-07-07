@@ -2,6 +2,7 @@
   "extends": "./tsconfig",
   "compilerOptions": {
     /* Base Options: */
-    "outDir": "docs"
+    "outDir": "docs",
+    "declaration": false
   }
 }
