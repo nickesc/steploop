@@ -80,7 +80,20 @@ describe('StepLoop', () => {
         loop.play();
         await sleep(50);
         expect(loop.is_running()).toBe(false);
-        expect(loop.get_step()).toBeGreaterThanOrEqual(4);
+        expect(loop.get_step()).toBe(4);
+    });
+
+    it('should set lifespan', async () => {
+        const loop = new StepLoop(60, 2);
+        loop.start();
+        await sleep(50);
+        expect(loop.is_running()).toBe(false);
+        loop.set_lifespan(5);
+        expect(loop.get_lifespan()).toBe(5);
+        loop.play();
+        await sleep(50);
+        expect(loop.is_running()).toBe(false);
+        expect(loop.get_step()).toBe(5);
     });
 
     it('should call step hooks in the correct order', async () => {
