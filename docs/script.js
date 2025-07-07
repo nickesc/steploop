@@ -16,6 +16,7 @@ const pause = document.getElementById("pause")
 const play = document.getElementById("play")
 const extension = document.getElementById("extension")
 const extend = document.getElementById("extend")
+const setLifespan = document.getElementById("set-lifespan")
 
 const container = document.getElementById("container")
 const box = document.getElementById("box")
@@ -71,6 +72,10 @@ function testSteploop() {
 
     setSps.addEventListener("click", function(){
         demoLoop.set_sps(parseInt(sps.value));
+    });
+
+    setLifespan.addEventListener("click", function(){
+        demoLoop.set_lifespan(parseInt(lifespan.value));
     });
 
     raf.addEventListener("click", function(){
