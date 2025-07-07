@@ -27,7 +27,11 @@
     "build:docs": "npm run build && npm run docs"
   },
   "files": [
-    "build/**/*"
+    "build/**/*",
+    "README.md",
+    "docs/icon.svg",
+    "CHANGELOG.md",
+    "LICENSE"
   ],
   "devDependencies": {
     "jsdoc-to-markdown": "^9.1.1",
