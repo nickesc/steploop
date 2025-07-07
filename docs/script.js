@@ -17,15 +17,16 @@ const play = document.getElementById("play")
 const extension = document.getElementById("extension")
 const extend = document.getElementById("extend")
 
+const container = document.getElementById("container")
 const box = document.getElementById("box")
 
 class Demo extends StepLoop {
 
-    left = 20
+    left = 0
 
     initial() {
-        this.left = 20;
-        box.style.backgroundColor = "orange"
+        this.left = 0;
+        box.className = "active"
         console.log("initial", Date.now());
     }
     async background() {
@@ -39,10 +40,10 @@ class Demo extends StepLoop {
         frame.innerHTML = this.get_step()
         span.innerHTML = this.get_lifespan()
         realSps.innerHTML = Math.round(this.get_real_sps())
-        if (this.left+1 <= window.innerWidth-120 ) {
+        if (this.left+1 <= container.clientWidth-(box.clientWidth + 12) ) {
             this.left = this.left+1
         } else {
-            this.left = 20
+            this.left = 0
         }
         box.style.left = `${this.left}px`
     }
@@ -51,16 +52,16 @@ class Demo extends StepLoop {
     }
 
     on_pause(){
-        box.style.backgroundColor="#00bfff"
+        box.className = "paused"
     }
 
     on_play(){
-        box.style.backgroundColor="orange"
+        box.className = "active"
     }
 
     final() {
         //console.log("final", this.step_num);
-        box.style.backgroundColor = "grey"
+        box.className = "finished"
         console.log("final", Date.now())
     }
 }
@@ -73,20 +74,21 @@ function testSteploop() {
     });
 
     raf.addEventListener("click", function(){
-        demoLoop.use_raf(raf.checked);
+        demoLoop.set_use_RAF(raf.checked);
     });
 
     start.addEventListener("click", function(){
         if (init) {
-            demoLoop.start();
-        } else {
-            init = true
-            demoLoop = new Demo(parseInt(sps.value), parseInt(lifespan.value), raf.checked);
-            demoLoop.start();
+            demoLoop.finish();
+            init = false;
         }
+        init = true
+        demoLoop = new Demo(parseInt(sps.value), parseInt(lifespan.value), raf.checked);
+        demoLoop.start();
     });
     finish.addEventListener("click", function(){
         demoLoop.finish();
+        init = false;
     });
     pause.addEventListener("click", function(){
         demoLoop.pause();
