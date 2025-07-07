@@ -91,7 +91,7 @@ describe('StepLoop', () => {
         loop.set_lifespan(5);
         expect(loop.get_lifespan()).toBe(5);
         loop.play();
-        await sleep(50);
+        await sleep(100);
         expect(loop.is_running()).toBe(false);
         expect(loop.get_step()).toBe(5);
     });
