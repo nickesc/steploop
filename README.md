@@ -6,7 +6,7 @@
     <a href="https://www.npmjs.com/package/steploop"><img alt="NPM: npmjs.com/package/steploop" src="https://img.shields.io/npm/v/steploop?style=for-the-badge&logo=npm&logoColor=white&label=npm&color=%23C12127&labelColor=%23505050"></a>
   </div>
   <br>
-  <img src="./docs/icon.svg" width="150px">
+  <img src="docs/icon.svg" width="150px">
   <h3 align="center">
     <code>steploop</code>
   </h3>
@@ -46,9 +46,6 @@ Import the `StepLoop` class in your TypeScript or JavaScript file:
 import { StepLoop } from "steploop";
 ```
 
-> [!NOTE]
-> `steploop` should be imported as an ES6 module.
-
 ## Basic Usage
 
 To define a new loop, extend the `StepLoop` class and override its methods to implement custom behavior.
@@ -75,7 +72,7 @@ const app = new App(60, 100);
 app.start();
 ```
 
-To see a `StepLoop` in action and play with execution, check out the [demo page](https://nickesc.github.io/steploop/) or the [demo code](/docs/script.js).
+To see a `StepLoop` in action and play with execution, check out the [demo page](https://nickesc.github.io/steploop/) or the [demo code](https://github.com/nickesc/steploop/blob/main/docs/script.js).
 
 ## Lifecycle
 
