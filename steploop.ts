@@ -1,30 +1,57 @@
 /**
- * @fileoverview Extend the {@link StepLoop} class to define your own loop.
+ * @fileoverview Provides the {@link StepLoop} class, a foundation for building loops that execute at a consistent, specified rate.
  *
- * The {@link StepLoop} class provides a base for a loop with steps executed at a set rate of steps-per-second.
+ * To define a new loop, extend the {@link StepLoop} class and override its methods to implement custom behavior.
  *
- * Executes at 60 steps-per-second by default.
+ * ### Lifecycle
  *
- * Executes in three stages:
+ * The {@link StepLoop} class executes in three distinct stages, with hooks that can be overridden to add custom logic:
  *
- * ##### 1. Initialization Stage
- * - {@link StepLoop.initial()}
- * ##### 2. Looping Stage
- * 1. {@link StepLoop.before()}
- * 2. {@link StepLoop.step()}
- * 3. {@link StepLoop.after()}
- * ##### 3. Termination Stage
- * - {@link StepLoop.final()}
- *
- * The initialization stage and termination stage each execute once, as the first step and last step respectively. The looping stage will start after the initialization stage is done, and it will loop through its three parts until something triggers the termination stage and its lifecycle comes to an end.
+ * 1.  **Initialization:** Runs once at the beginning of the loop.
+ *     - {@link StepLoop.initial()}
+ * 2.  **Looping:** The core of the loop, which repeatedly executes the following sequence:
+ *     - {@link StepLoop.background()} (async)
+ *     - {@link StepLoop.before()}
+ *     - {@link StepLoop.step()}
+ *     - {@link StepLoop.after()}
+ * 3.  **Termination:** Runs once when the loop ends, either by reaching the end of its lifespan or being manually stopped.
+ *     - {@link StepLoop.final()}
  *
  * @module steploop
  */
 
 /**
- * A `StepLoop`.
+ * A base class for building loops that execute at a consistent, specified rate.
+ *
+ * {@link StepLoop} provides a structured lifecycle with methods that can be overridden to implement custom behavior.
+ *
+ * The {@link StepLoop} class manages the timing and execution flow, supporting both fixed-step updates via {@link setTimeout()} and smoother, display-synchronized updates using {@link window.requestAnimationFrame()}.
+ *
+ * The loop can run indefinitely or for a set number of steps, and its execution can be precisely controlled, allowing it to be paused, resumed, and dynamically modified at runtime.
+ *
+ * @example
+ * ```ts
+ * import { StepLoop } from "steploop";
+ *
+ * class App extends StepLoop {
+ *   override initial(): void {
+ *     console.log("Loop starting");
+ *   }
+ *
+ *   override step(): void {
+ *     console.log(`Executing step: ${this.get_step()}`);
+ *   }
+ *
+ *   override final(): void {
+ *     console.log("Loop finished");
+ *   }
+ * }
+ *
+ * // Create a new loop that runs at 60 steps-per-second for 100 steps
+ * const loop = new App(60, 100);
+ * loop.start();
+ * ```
  * @class
- * @static
  */
 export class StepLoop {
     private _step_num: number = 0;
