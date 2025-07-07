@@ -1,24 +1,60 @@
 /**
- * Extend the {@link StepLoop} class to define your own loop.
+ * @fileoverview Provides the {@link StepLoop} class, a foundation for building loops that execute at a consistent, specified rate.
  *
- * The {@link StepLoop} class provides a base for a loop with steps executed at a set rate of steps-per-second.
+ * To define a new loop, extend the {@link StepLoop} class and override its methods to implement custom behavior.
  *
- * Executes at 60 steps-per-second by default.
+ * ### Lifecycle
  *
- * Executes in three stages:
+ * The {@link StepLoop} class executes in three distinct stages, with hooks that can be overridden to add custom logic:
  *
- * ##### 1. Initialization Stage
- * - {@link StepLoop.initial()}
- * ##### 2. Looping Stage
- * 1. {@link StepLoop.before()}
- * 2. {@link StepLoop.step()}
- * 3. {@link StepLoop.after()}
- * ##### 3. Termination Stage
- * - {@link StepLoop.final()}
+ * 1.  **Initialization:** Runs once at the beginning of the loop
+ *     - {@link StepLoop.initial()}
+ * 2.  **Looping:** The core of the loop, which repeatedly executes the following sequence:
+ *     - {@link StepLoop.background()} (async)
+ *     - {@link StepLoop.before()}
+ *     - {@link StepLoop.step()}
+ *     - {@link StepLoop.after()}
+ * 3.  **Termination:** Runs once when the loop ends, either by reaching the end of its lifespan or being manually stopped
+ *     - {@link StepLoop.final()}
  *
- * The initialization stage and termination stage each execute once, as the first step and last step respectively. The looping stage will start after the initialization stage is done, and it will loop through its three parts until something triggers the termination stage and its lifecycle comes to an end.
+ * The loop can run indefinitely or for a set number of steps, and its execution can be precisely controlled, allowing it to be paused, resumed, and dynamically modified at runtime.
+ *
+ * @module steploop
  */
-class StepLoop {
+/**
+ * A base class for building loops that execute at a consistent, specified rate.
+ *
+ * {@link StepLoop} provides a structured lifecycle with methods that can be overridden to implement custom behavior.
+ *
+ * The {@link StepLoop} class manages the timing and execution flow, supporting both fixed-step updates via {@link setTimeout()} and smoother, display-synchronized updates using {@link window.requestAnimationFrame()}.
+ *
+ * The loop can run indefinitely or for a set number of steps, and its execution can be precisely controlled, allowing it to be paused, resumed, and dynamically modified at runtime.
+ *
+ * @example
+ * ```ts
+ * import { StepLoop } from "steploop";
+ *
+ * class App extends StepLoop {
+ *   override initial(): void {
+ *     console.log("Loop starting");
+ *   }
+ *
+ *   override step(): void {
+ *     console.log(`Executing step: ${this.get_step()}`);
+ *   }
+ *
+ *   override final(): void {
+ *     console.log("Loop finished");
+ *   }
+ * }
+ *
+ * // Create a new loop that runs at 60 steps-per-second for 100 steps
+ * const loop = new App(60, 100);
+ * loop.start();
+ * ```
+ * @class
+ */
+export class StepLoop {
     _step_num = 0;
     _lifespan;
     _sps;
@@ -58,6 +94,7 @@ class StepLoop {
      *     }
      * }
      * ```
+     * @instance
      */
     initial() {
         return;
@@ -76,6 +113,7 @@ class StepLoop {
      *     }
      * }
      * ```
+     * @instance
      */
     async background() {
         return;
@@ -94,6 +132,7 @@ class StepLoop {
      *     }
      * }
      * ```
+     * @instance
      */
     before() {
         return;
@@ -112,6 +151,7 @@ class StepLoop {
      *     }
      * }
      * ```
+     * @instance
      */
     step() {
         return;
@@ -130,6 +170,7 @@ class StepLoop {
      *     }
      * }
      * ```
+     * @instance
      */
     after() {
         return;
@@ -148,6 +189,7 @@ class StepLoop {
      *     }
      * }
      * ```
+     * @instance
      */
     final() {
         return;
@@ -166,6 +208,7 @@ class StepLoop {
      *     }
      * }
      * ```
+     * @instance
      */
     on_pause() {
         return;
@@ -184,6 +227,7 @@ class StepLoop {
      *     }
      * }
      * ```
+     * @instance
      */
     on_play() {
         return;
@@ -200,6 +244,7 @@ class StepLoop {
      *
      * console.log(app.is_running()) // Output -> `true`
      * ```
+     * @instance
      */
     is_running() {
         return this._running;
@@ -216,6 +261,7 @@ class StepLoop {
      *
      * console.log(app.is_paused()) // Output -> `false`
      * ```
+     * @instance
      */
     is_paused() {
         return this._paused;
@@ -232,6 +278,7 @@ class StepLoop {
      *
      * console.log(app.get_step()) // Output -> `1`
      * ```
+     * @instance
      */
     get_step() {
         return this._step_num;
@@ -248,6 +295,7 @@ class StepLoop {
      *
      * console.log(app.get_sps()) // Output -> `60`
      * ```
+     * @instance
      */
     get_sps() {
         return this._sps;
@@ -264,12 +312,30 @@ class StepLoop {
      *
      * console.log(app.get_real_sps())
      * ```
+     * @instance
      */
     get_real_sps() {
         if (this._lastStepDuration === 0) {
             return 0;
         }
         return 1000 / this._lastStepDuration;
+    }
+    /**
+     * Returns the current lifespan of the {@link StepLoop} (in steps).
+     *
+     * @returns {number | undefined} the current loop lifespan; returns `undefined` if the lifespan is unlimited
+     * @example
+     * ```ts
+     * class App extends StepLoop {}
+     * let app: App = new App(500);
+     * app.start()
+     *
+     * console.log(app.get_lifespan()) // Output -> `500`
+     * ```
+     * @instance
+     */
+    get_lifespan() {
+        return this._lifespan;
     }
     /**
      * Sets the current steps-per-second (sps). Alters the speed at which the {@link StepLoop} runs: higher values will result in more steps in a faster step-speed and lower values will result in a lower step-speed. Default speed is 60 steps-per-second.
@@ -284,6 +350,7 @@ class StepLoop {
      *
      * console.log(app.set_sps(120)) // Output -> `120`
      * ```
+     * @instance
      */
     set_sps(sps) {
         //if (this._initialized) return this._sps;;
@@ -292,20 +359,23 @@ class StepLoop {
         return this._sps;
     }
     /**
-     * Returns the current lifespan of the {@link StepLoop} (in steps).
+     * Set whether or not to use {@link window.requestAnimationFrame()} for the {@link StepLoop}. When set to `true`, the loop will synchronize with the browser's rendering cycle (if the loop is running in a browser), which can result in smoother animations and better performance. When disabled, the loop will use a step-scheduler based on {@link setTimeout()}, which may be less efficient but more predictable.
      *
-     * @returns {number | undefined} the current loop lifespan; returns `undefined` if the lifespan is unlimited
+     * @param {boolean} status - `true` to use `requestAnimationFrame`, `false` to use the step scheduler.
+     * @returns {boolean} the new status of `requestAnimationFrame`
      * @example
      * ```ts
      * class App extends StepLoop {}
-     * let app: App = new App(500);
-     * app.start()
+     * let app: App = new App();
      *
-     * console.log(app.get_lifespan()) // Output -> `500`
+     * app.set_use_RAF(true)
+     * app.start()
      * ```
+     * @instance
      */
-    get_lifespan() {
-        return this._lifespan;
+    set_use_RAF(status) {
+        this._RAFActive = status;
+        return this._RAFActive;
     }
     /**
      * Extend (or reduce) the lifespan of the {@link StepLoop}. Adds the specified number of steps to the current lifespan, or removes the limit on the {@link StepLoop}'s lifespan (will run until {@link StepLoop.finish()} is called).
@@ -322,6 +392,7 @@ class StepLoop {
      *
      * console.log(app.extend_lifespan(100)) // Output -> `100`
      * ```
+     * @instance
      */
     extend_lifespan(steps) {
         if (!this._initialized)
@@ -349,6 +420,7 @@ class StepLoop {
      *
      * app.pause()
      * ```
+     * @instance
      */
     pause() {
         if (!this._initialized || !this._running || this._kill)
@@ -371,6 +443,7 @@ class StepLoop {
      * app.pause()
      * app.play()
      * ```
+     * @instance
      */
     play() {
         if (!this._initialized || this._running || this._kill)
@@ -394,6 +467,7 @@ class StepLoop {
      *
      * app.start()
      * ```
+     * @instance
      */
     start() {
         this._running = true;
@@ -412,6 +486,7 @@ class StepLoop {
      *
      * app.finish()
      * ```
+     * @instance
      */
     finish() {
         if (!this._initialized || this._kill)
@@ -421,24 +496,6 @@ class StepLoop {
         this._kill = true;
         this._cancel_next_step();
         this._term();
-    }
-    /**
-     * Set whether or not to use {@link window.requestAnimationFrame()} for the {@link StepLoop}. When set to `true`, the loop will synchronize with the browser's rendering cycle (if the loop is running in a browser), which can result in smoother animations and better performance. When disabled, the loop will use a step-scheduler based on {@link setTimeout()}, which may be less efficient but more predictable.
-     *
-     * @param {boolean} status - `true` to use `requestAnimationFrame`, `false` to use the step scheduler.
-     * @returns {boolean} the new status of `requestAnimationFrame`
-     * @example
-     * ```ts
-     * class App extends StepLoop {}
-     * let app: App = new App();
-     *
-     * app.set_use_RAF(true)
-     * app.start()
-     * ```
-     */
-    set_use_RAF(status) {
-        this._RAFActive = status;
-        return this._RAFActive;
     }
     _RAFAvailable = typeof requestAnimationFrame !== 'undefined';
     _RAFActive;
@@ -538,4 +595,3 @@ class StepLoop {
         this._run(performance.now());
     }
 }
-export { StepLoop };

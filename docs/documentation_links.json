@@ -1,0 +1,28 @@
+{
+  "replace": [
+    {"](StepLoop)":"](#module_steploop.StepLoop)"},
+    {"](StepLoop.initial())":"](#module_steploop.StepLoop+initial)"},
+    {"](StepLoop.background())":"](#module_steploop.StepLoop+background)"},
+    {"](StepLoop.before())":"](#module_steploop.StepLoop+before)"},
+    {"](StepLoop.step())":"](#module_steploop.StepLoop+step)"},
+    {"](StepLoop.after())":"](#module_steploop.StepLoop+after)"},
+    {"](StepLoop.final())":"](#module_steploop.StepLoop+final)"},
+    {"](StepLoop.on_pause())":"](#module_steploop.StepLoop+on_pause)"},
+    {"](StepLoop.on_play())":"](#module_steploop.StepLoop+on_play)"},
+    {"](StepLoop.is_running())":"](#module_steploop.StepLoop+is_running)"},
+    {"](StepLoop.is_paused())":"](#module_steploop.StepLoop+is_paused)"},
+    {"](StepLoop.get_step())":"](#module_steploop.StepLoop+get_step)"},
+    {"](StepLoop.get_sps())":"](#module_steploop.StepLoop+get_sps)"},
+    {"](StepLoop.get_real_sps())":"](#module_steploop.StepLoop+get_real_sps)"},
+    {"](StepLoop.get_lifespan())":"](#module_steploop.StepLoop+get_lifespan)"},
+    {"](StepLoop.set_sps())":"](#module_steploop.StepLoop+set_sps)"},
+    {"](StepLoop.set_use_RAF())":"](#module_steploop.StepLoop+set_use_RAF)"},
+    {"](StepLoop.extend_lifespan())":"](#module_steploop.StepLoop+extend_lifespan)"},
+    {"](StepLoop.pause())":"](#module_steploop.StepLoop+pause)"},
+    {"](StepLoop.play())":"](#module_steploop.StepLoop+play)"},
+    {"](StepLoop.start())":"](#module_steploop.StepLoop+set_sps)"},
+    {"](StepLoop.finish())":"](#module_steploop.StepLoop+finish)"},
+    {"](window.requestAnimationFrame())":"](https://developer.mozilla.org/en-US/docs/Web/API/Window/requestAnimationFrame)"},
+    {"](setTimeout())":"](https://developer.mozilla.org/en-US/docs/Web/API/Window/setTimeout)"}
+  ]
+}
