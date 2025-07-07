@@ -17,6 +17,7 @@
     {"](StepLoop.get_lifespan())":"](#module_steploop.StepLoop+get_lifespan)"},
     {"](StepLoop.set_sps())":"](#module_steploop.StepLoop+set_sps)"},
     {"](StepLoop.set_use_RAF())":"](#module_steploop.StepLoop+set_use_RAF)"},
+    {"](StepLoop.set_lifespan())":"](#module_steploop.StepLoop+set_lifespan)"},
     {"](StepLoop.extend_lifespan())":"](#module_steploop.StepLoop+extend_lifespan)"},
     {"](StepLoop.pause())":"](#module_steploop.StepLoop+pause)"},
     {"](StepLoop.play())":"](#module_steploop.StepLoop+play)"},
