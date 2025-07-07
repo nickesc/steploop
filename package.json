@@ -1,6 +1,6 @@
 {
   "name": "steploop",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "a foundation for building loops that execute at a consistent, specified rate",
   "keywords": [
     "loop",
