@@ -32,8 +32,6 @@
 
 The `StepLoop` class manages the timing and execution flow, supporting both fixed-step updates via [`setTimeout()`](https://developer.mozilla.org/en-US/docs/Web/API/Window/setTimeout) and smoother, display-synchronized updates using [`window.requestAnimationFrame()`](https://developer.mozilla.org/en-US/docs/Web/API/Window/requestAnimationFrame).
 
-The loop can run indefinitely or for a set number of steps, and its execution can be precisely controlled, allowing it to be paused, resumed, and dynamically modified at runtime.
-
 ## Install
 
 Install `steploop` via NPM:
@@ -90,6 +88,8 @@ The `StepLoop` class executes in three distinct stages, with hooks that can be o
     - `after()`: Runs after the `step()` method.
 3.  **Termination:** Runs once when the loop ends, either by reaching the end of its lifespan or being manually stopped
     - `final()`: Runs once when the loop ends.
+
+The loop can run indefinitely or for a set number of steps, and its execution can be precisely controlled, allowing it to be paused, resumed, and dynamically modified at runtime.
 
 ## Reference
 

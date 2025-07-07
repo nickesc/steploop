@@ -7,15 +7,17 @@
  *
  * The {@link StepLoop} class executes in three distinct stages, with hooks that can be overridden to add custom logic:
  *
- * 1.  **Initialization:** Runs once at the beginning of the loop.
+ * 1.  **Initialization:** Runs once at the beginning of the loop
  *     - {@link StepLoop.initial()}
  * 2.  **Looping:** The core of the loop, which repeatedly executes the following sequence:
  *     - {@link StepLoop.background()} (async)
  *     - {@link StepLoop.before()}
  *     - {@link StepLoop.step()}
  *     - {@link StepLoop.after()}
- * 3.  **Termination:** Runs once when the loop ends, either by reaching the end of its lifespan or being manually stopped.
+ * 3.  **Termination:** Runs once when the loop ends, either by reaching the end of its lifespan or being manually stopped
  *     - {@link StepLoop.final()}
+ *
+ * The loop can run indefinitely or for a set number of steps, and its execution can be precisely controlled, allowing it to be paused, resumed, and dynamically modified at runtime.
  *
  * @module steploop
  */

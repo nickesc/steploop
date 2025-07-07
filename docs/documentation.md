@@ -9,15 +9,17 @@ To define a new loop, extend the [StepLoop](#module_steploop.StepLoop) class and
 
 The [StepLoop](#module_steploop.StepLoop) class executes in three distinct stages, with hooks that can be overridden to add custom logic:
 
-1.  **Initialization:** Runs once at the beginning of the loop.
+1.  **Initialization:** Runs once at the beginning of the loop
     - [StepLoop.initial()](#module_steploop.StepLoop+initial)
 2.  **Looping:** The core of the loop, which repeatedly executes the following sequence:
     - [StepLoop.background()](#module_steploop.StepLoop+background) (async)
     - [StepLoop.before()](#module_steploop.StepLoop+before)
     - [StepLoop.step()](#module_steploop.StepLoop+step)
     - [StepLoop.after()](#module_steploop.StepLoop+after)
-3.  **Termination:** Runs once when the loop ends, either by reaching the end of its lifespan or being manually stopped.
+3.  **Termination:** Runs once when the loop ends, either by reaching the end of its lifespan or being manually stopped
     - [StepLoop.final()](#module_steploop.StepLoop+final)
+
+The loop can run indefinitely or for a set number of steps, and its execution can be precisely controlled, allowing it to be paused, resumed, and dynamically modified at runtime.
 
 
 * [steploop](#module_steploop)
