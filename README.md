@@ -37,7 +37,7 @@ The `StepLoop` class manages the timing and execution flow, supporting both fixe
 Install `steploop` via NPM:
 
 ```sh
-npm i steploop  # NOT PUBLISHED
+npm i steploop
 ```
 
 Import the `StepLoop` class in your TypeScript or JavaScript file:
