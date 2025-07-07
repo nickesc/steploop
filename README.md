@@ -17,7 +17,8 @@
     by <a href="https://nickesc.github.io">N. Escobar</a> / <a href="https://github.com/nickesc">nickesc</a>
   </h6>
   <h6 align="center">
-    a fully-featured main-loop written in TypeScript
+    a foundation for building loops that<br>
+    execute at a consistent, specified rate
   </h6>
 </h3>
 
