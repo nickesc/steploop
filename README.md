@@ -75,6 +75,8 @@ const app = new App(60, 100);
 app.start();
 ```
 
+To see a `StepLoop` in action and play with execution, check out the [package demo](https://nickesc.github.io/steploop/).
+
 ## Lifecycle
 
 The `StepLoop` class executes in three distinct stages, with hooks that can be overridden to add custom logic:

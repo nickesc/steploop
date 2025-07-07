@@ -32,66 +32,140 @@
         a:hover {
             text-decoration: underline;
         }
+
+        button {
+            min-width: 100px;
+        }
     </style>
   </head>
   <body>
     <div>
-        <h1>steploop Demo</h1>
-        <h6>by <a href="https://nickesc.github.io">N. Escobar</a> / <a href="https://github.com/nickesc">nickesc</a></h6>
+        <h1 id="title"> <div id="icon"><img src="/icon.svg" width="100%" height="auto"></div> <span><code>steploop</code> Demo</span></h1>
+        <h6>by <a href="https://nickesc.github.io">N. Escobar</a> / <a href="https://github.com/nickesc">nickesc</a> </h6>
+        <h6>
+            <a href="https://github.com/nickesc/steploop"><img alt="Source: Github" src="https://img.shields.io/badge/source-github-brightgreen?style=for-the-badge&logo=github&labelColor=%23505050"></a>
+            <a href="https://github.com/nickesc/steploop/actions/workflows/steploop-ts-tests.yml"><img alt="Tests: github.com/nickesc/steploop/actions/workflows/steploop-ts-tests.yml" src="https://img.shields.io/github/actions/workflow/status/nickesc/steploop/steploop-ts-tests.yml?logo=github&label=tests&logoColor=white&style=for-the-badge&labelColor=%23505050"></a>
+            <a href="https://www.npmjs.com/package/steploop"><img alt="NPM: npmjs.com/package/steploop" src="https://img.shields.io/npm/v/steploop?style=for-the-badge&logo=npm&logoColor=white&label=npm&color=%23C12127&labelColor=%23505050"></a>
+        </h6>
+
+        <div>
+            View <a href="">demo source code</a>
+        </div>
     </div>
 
     <div>
-        <h2>System</h2>
+        <h2><code>StepLoop</code> Playground</h2>
         <div>
-            <!-- <div>
-                <button id="new">New</button>
-            </div> -->
-            <!-- RAF Checkbox -->
+            <div>
+                <div>
+                <table>
+                    <tr>
+                        <td>Step:</td>
+                        <td><kbd><span id="frame">0</span></kbd></td>
+                    </tr>
+                    <tr>
+                        <td>Current lifespan:</td>
+                        <td><kbd><span id="span">0</span></kbd></td>
+                    </tr>
+                    <tr>
+                        <td>Real SPS:</td>
+                        <td><kbd><span id="real-sps">0</span></kbd></td>
+                    </tr>
+                </table>
+            </div>
+            <br>
+            <div>
+                <table>
+                    <tr>
+                        <td><label for="lifespan">Lifespan:</label></td>
+                        <td><input type="text" name="lifespan" id="lifespan" value="500"></td>
+                    </tr>
+                    <tr>
+                        <td><label for="extension">Extend lifespan:</label></td>
+                        <td><input type="text" name="extension" id="extension" value="500"></td>
+                        <td><button id="extend">Extend</button></td>
+                    </tr>
 
+                    <tr>
+                        <td><label for="sps">Steps-per-second:</label></td>
+                        <td><input type="text" name="sps" id="sps" value="60"></td>
+                        <td><button id="set-sps">Set</button></td>
+                    </tr>
+                    <tr>
+                        <td><label for="raf">Use RAF:</label></td>
+                        <td><input type="checkbox" name="raf" id="raf"></td>
+                    </tr>
+                </table>
+            </div>
+            <br>
             <div>
-                <div>Step: <span id="frame">0</span></div>
-                <div>Lifespan: <span id="span">0</span></div>
-                <div>Real SPS: <span id="real-sps">0</span></div>
+                <table>
+                    <tr>
+                        <td><button id="start">Start</button></td>
+                        <td><button id="finish">Finish</button></td>
+                    </tr>
+                    <tr>
+                        <td><button id="pause">Pause</button></td>
+                        <td><button id="play">Play</button></td>
+                    </tr>
+
+                </table>
+
+
             </div>
             <div>
-                <div><label for="lifespan">Lifespan</label><input type="text" name="lifespan" id="lifespan" value="500"></div>
-                <div><label for="sps">Steps-per-second</label><input type="text" name="sps" id="sps" value="60">
-                <button id="set-sps">Set SPS</button></div>
-                <div><label for="raf">Use RAF</label><input type="checkbox" name="raf" id="raf"></div>
+
+
             </div>
             <div>
-                <button id="start">Start</button>
-                <button id="finish">Finish</button>
-            </div>
-            <div>
-                <button id="pause">Pause</button>
-                <button id="play">Play</button>
-            </div>
-            <div>
-                <label for="extension">Extension</label><input type="text" name="extension" id="extension" value="500">
-                <button id="extend">Extend</button>
+
+
             </div>
             <div id="container">
+                <div id="box" class="inactive">
 
+                </div>
             </div>
-            <div id="box">
 
-            </div>
             <style>
-                #box, #container {
-                    position: absolute;
+                #title {
+                    display: flex;
+                    align-items: center;
+                    column-gap: .5em;
+
+                }
+
+                #icon {
+                    width: 2em;
+                }
+
+                #box {
+                    position: relative;
                     width: 100px;
                     height: 100px;
-                    left: 20px;
-                    top: 50vh;
+                    left: 0px;
                     background-color: grey;
                 }
 
                 #container {
-                    width: calc(100vw - 40px);
-                    background-color: transparent;
-                    outline: #333 4px solid;
-                    outline-offset: 8px;
+                    width: 100%;
+                    height: 124px;
+                    margin-top: 50px;
+                    border: #333 4px solid;
+                    padding: 8px;
+                }
+                #box.inactive, #box.paused{
+                    background-color: #ff959c;
+                }
+                #box.active{
+                    background-color: #ff4e59;
+                }
+                #box.paused{
+                    background-color: #ff959c;
+                    outline: #ff4e59 4px dashed;
+                }
+                #box.finished{
+                    background-color: #333;
                 }
             </style>
         </div>
