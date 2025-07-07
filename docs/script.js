@@ -78,15 +78,16 @@ function testSteploop() {
 
     start.addEventListener("click", function(){
         if (init) {
-            demoLoop.start();
-        } else {
-            init = true
-            demoLoop = new Demo(parseInt(sps.value), parseInt(lifespan.value), raf.checked);
-            demoLoop.start();
+            demoLoop.finish();
+            init = false;
         }
+        init = true
+        demoLoop = new Demo(parseInt(sps.value), parseInt(lifespan.value), raf.checked);
+        demoLoop.start();
     });
     finish.addEventListener("click", function(){
         demoLoop.finish();
+        init = false;
     });
     pause.addEventListener("click", function(){
         demoLoop.pause();
