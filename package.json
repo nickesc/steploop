@@ -1,8 +1,20 @@
 {
   "name": "steploop",
   "version": "1.0.0",
-  "description": "a fully-featured main-loop written in TypeScript",
-  "keywords": [],
+  "description": "a foundation for building loops that execute at a consistent, specified rate",
+  "keywords": [
+    "loop",
+    "main-loop",
+    "game-loop",
+    "animation-loop",
+    "frames",
+    "fps",
+    "framerate",
+    "animation",
+    "real-time",
+    "typescript",
+    "javascript"
+  ],
   "homepage": "https://github.com/nickesc/steploop#readme",
   "bugs": {
     "url": "https://github.com/nickesc/steploop/issues"
