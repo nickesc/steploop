@@ -41,8 +41,8 @@ The loop can run indefinitely or for a set number of steps, and its execution ca
         * [.get_lifespan()](#module_steploop.StepLoop+get_lifespan) ⇒ <code>number</code> \| <code>undefined</code>
         * [.set_sps(sps)](#module_steploop.StepLoop+set_sps) ⇒ <code>number</code>
         * [.set_use_RAF(status)](#module_steploop.StepLoop+set_use_RAF) ⇒ <code>boolean</code>
-        * [.extend_lifespan(steps)](#module_steploop.StepLoop+extend_lifespan) ⇒ <code>number</code> \| <code>undefined</code>
         * [.set_lifespan([steps])](#module_steploop.StepLoop+set_lifespan) ⇒ <code>number</code> \| <code>undefined</code>
+        * [.extend_lifespan(steps)](#module_steploop.StepLoop+extend_lifespan) ⇒ <code>number</code> \| <code>undefined</code>
         * [.pause()](#module_steploop.StepLoop+pause) ⇒ <code>void</code>
         * [.play()](#module_steploop.StepLoop+play) ⇒ <code>void</code>
         * [.start()](#module_steploop.StepLoop+start) ⇒ <code>void</code>
@@ -79,8 +79,8 @@ The loop can run indefinitely or for a set number of steps, and its execution ca
     * [.get_lifespan()](#module_steploop.StepLoop+get_lifespan) ⇒ <code>number</code> \| <code>undefined</code>
     * [.set_sps(sps)](#module_steploop.StepLoop+set_sps) ⇒ <code>number</code>
     * [.set_use_RAF(status)](#module_steploop.StepLoop+set_use_RAF) ⇒ <code>boolean</code>
-    * [.extend_lifespan(steps)](#module_steploop.StepLoop+extend_lifespan) ⇒ <code>number</code> \| <code>undefined</code>
     * [.set_lifespan([steps])](#module_steploop.StepLoop+set_lifespan) ⇒ <code>number</code> \| <code>undefined</code>
+    * [.extend_lifespan(steps)](#module_steploop.StepLoop+extend_lifespan) ⇒ <code>number</code> \| <code>undefined</code>
     * [.pause()](#module_steploop.StepLoop+pause) ⇒ <code>void</code>
     * [.play()](#module_steploop.StepLoop+play) ⇒ <code>void</code>
     * [.start()](#module_steploop.StepLoop+start) ⇒ <code>void</code>
@@ -385,28 +385,6 @@ let app: App = new App();
 app.set_use_RAF(true)
 app.start()
 ```
-<a name="module_steploop.StepLoop+extend_lifespan"></a>
-
-#### stepLoop.extend\_lifespan(steps) ⇒ <code>number</code> \| <code>undefined</code>
-Extend (or reduce) the lifespan of the [StepLoop](#module_steploop.StepLoop). Adds the specified number of steps to the current lifespan.
-
-If [StepLoop.extend_lifespan()](#module_steploop.StepLoop+extend_lifespan) is called after the lifespan limit is reached, [StepLoop.play()](#module_steploop.StepLoop+play) can be called to resume executing the [StepLoop](#module_steploop.StepLoop). The termination stage will be executed again when the limit is reached again.
-
-**Kind**: instance method of [<code>StepLoop</code>](#module_steploop.StepLoop)  
-**Returns**: <code>number</code> \| <code>undefined</code> - the new lifespan; returns undefined if the loop is uninitialized  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| steps | <code>number</code> | the number of steps to add to the lifespan |
-
-**Example**  
-```ts
-class App extends StepLoop {}
-let app: App = new App();
-app.start()
-
-console.log(app.extend_lifespan(100)) // Output -> `100`
-```
 <a name="module_steploop.StepLoop+set_lifespan"></a>
 
 #### stepLoop.set\_lifespan([steps]) ⇒ <code>number</code> \| <code>undefined</code>
@@ -428,6 +406,28 @@ let app: App = new App();
 app.start()
 
 console.log(app.set_lifespan(100)) // Output -> `100`
+```
+<a name="module_steploop.StepLoop+extend_lifespan"></a>
+
+#### stepLoop.extend\_lifespan(steps) ⇒ <code>number</code> \| <code>undefined</code>
+Extend (or reduce) the lifespan of the [StepLoop](#module_steploop.StepLoop). Adds the specified number of steps to the current lifespan.
+
+If [StepLoop.extend_lifespan()](#module_steploop.StepLoop+extend_lifespan) is called after the lifespan limit is reached, [StepLoop.play()](#module_steploop.StepLoop+play) can be called to resume executing the [StepLoop](#module_steploop.StepLoop). The termination stage will be executed again when the limit is reached again.
+
+**Kind**: instance method of [<code>StepLoop</code>](#module_steploop.StepLoop)  
+**Returns**: <code>number</code> \| <code>undefined</code> - the new lifespan; returns undefined if the loop is uninitialized  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| steps | <code>number</code> | the number of steps to add to the lifespan |
+
+**Example**  
+```ts
+class App extends StepLoop {}
+let app: App = new App();
+app.start()
+
+console.log(app.extend_lifespan(100)) // Output -> `100`
 ```
 <a name="module_steploop.StepLoop+pause"></a>
 
