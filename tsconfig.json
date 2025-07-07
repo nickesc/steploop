@@ -10,6 +10,7 @@
     "erasableSyntaxOnly": true,
     "verbatimModuleSyntax": true,
     "declaration": true,
+
     /* Type Checking */
     "strict": true,
     "noUncheckedIndexedAccess": true,
@@ -20,5 +21,10 @@
 
     /* If your code runs in the DOM: */
     //"lib": ["es2015", "dom", "dom.iterable"]
-  }
+  },
+  "exclude": [
+    "tests",
+    "node_modules",
+    "build"
+  ]
 }

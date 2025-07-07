@@ -21,8 +21,9 @@
   },
   "scripts": {
     "test": "vitest run",
-    "docs": "jsdoc2md --files build/steploop.js > docs/documentation.md && node docs/replace_links.js docs/documentation_links.json docs/documentation.md",
-    "build": "npx tsc -p tsconfig.build.json && cp build/steploop.js docs/",
+    "docs": "npx tsc -p tsconfig.docs.json && jsdoc2md --files build/steploop.js > docs/documentation.md && node scripts/replace_links.js scripts/documentation_links.json docs/documentation.md && npm run icon",
+    "icon": "[ -e  docs/icon.png ] && rm docs/icon.png; svg2png docs/icon.svg --output=docs/icon.png --width=1024 --height=1024",
+    "build": "npx tsc",
     "build:docs": "npm run build && npm run docs"
   },
   "files": [
@@ -30,6 +31,7 @@
   ],
   "devDependencies": {
     "jsdoc-to-markdown": "^9.1.1",
+    "svg2png": "^4.1.1",
     "tsx": "^4.20.3",
     "typescript": "^5.8.3",
     "vitest": "^3.2.4"
