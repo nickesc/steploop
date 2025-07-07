@@ -3,13 +3,22 @@
   <head>
     <title>steploop Demo</title>
     <style>
+        :root {
+            color-scheme: light dark;
+            --black:#111111AA;
+            --dark:#333;
+            --light:#EEE;
+            --white:#ffffffAA;
+
+        }
         html {
             box-sizing: border-box;
             max-width: 70ch;
             margin: auto;
             font-size: 1.25em;
-            color: #333;
             line-height: 1.4;
+            color: light-dark(var(--dark),var(--light));
+            background-color: light-dark(var(--white),var(--black));
         }
 
         * {
@@ -36,39 +45,119 @@
         button {
             min-width: 100px;
         }
+        input[type=text]{
+            width: 100px;
+        }
+    </style>
+    <style>
+        header > h1, footer, .badge {
+            display: flex;
+            align-items: center;
+            column-gap: .5em;
+            flex-wrap: wrap;
+        }
+
+        #icon {
+            width: 2em;
+            opacity: 80%;
+        }
+
+        #box {
+            position: relative;
+            width: 100px;
+            height: 100px;
+            left: 0px;
+            background-color: #ff4e59;
+            opacity: 80%;
+        }
+
+        #container {
+            width: 100%;
+            height: 124px;
+            margin-top: 50px;
+            border: light-dark(var(--black),var(--white)) 4px solid;
+            padding: 8px;
+        }
+        #box.inactive{
+            opacity: 50%;
+        }
+        #box.active{
+            background-color: #ff4e59;
+        }
+        #box.paused{
+            opacity: 80%;
+            background: repeating-linear-gradient(
+                -45deg,
+                #00000000,
+                #00000000 10px,
+                #ff4e59 10px,
+                #ff4e59 20px
+                );
+        }
+        #box.finished{
+            background-color: light-dark(var(--dark),var(--light));
+            opacity: 70%;
+        }
+        .badge, .badge-img {
+            max-height: 1em;
+        }
+        .code-inline {
+            background-color: light-dark(var(--light),var(--dark));
+            color: light-dark(var(--dark),var(--light));
+            font-family: monospace;
+            padding: 0.2em 0.4em;
+            border-radius: 6px;
+        }
+        label{
+            margin-right: 1em;
+        }
+        .label-container{
+            font-family: sans-serif;
+            font-weight: bold;
+            font-size: .85em;
+        }
+        p {
+            font-family: serif;
+        }
     </style>
   </head>
   <body>
+    <header>
+        <h1>
+            <div id="icon"><img src="icon.svg" width="100%" height="auto"></div><code class="code-inline">steploop</code> Demo
+        </h1>
+    </header>
     <div>
-        <h1 id="title"> <div id="icon"><img src="icon.svg" width="100%" height="auto"></div> <span><code>steploop</code> Demo</span></h1>
         <h6>by <a href="https://nickesc.github.io">N. Escobar</a> / <a href="https://github.com/nickesc">nickesc</a> </h6>
-        <h6>
-            <a href="https://github.com/nickesc/steploop"><img alt="Source: Github" src="https://img.shields.io/badge/source-github-brightgreen?style=for-the-badge&logo=github&labelColor=%23505050"></a>
-            <a href="https://github.com/nickesc/steploop/actions/workflows/steploop-ts-tests.yml"><img alt="Tests: github.com/nickesc/steploop/actions/workflows/steploop-ts-tests.yml" src="https://img.shields.io/github/actions/workflow/status/nickesc/steploop/steploop-ts-tests.yml?logo=github&label=tests&logoColor=white&style=for-the-badge&labelColor=%23505050"></a>
-            <a href="https://www.npmjs.com/package/steploop"><img alt="NPM: npmjs.com/package/steploop" src="https://img.shields.io/npm/v/steploop?style=for-the-badge&logo=npm&logoColor=white&label=npm&color=%23C12127&labelColor=%23505050"></a>
-        </h6>
+        <div>
+            <a href="https://github.com/nickesc/steploop"><img alt="Source: Github" src="https://img.shields.io/badge/source-nickesc%2Fsteploop-brightgreen?style=for-the-badge&logo=github&labelColor=%23333"></a>
+            <a href="https://github.com/nickesc/steploop/actions/workflows/steploop-ts-tests.yml"><img alt="Tests: github.com/nickesc/steploop/actions/workflows/steploop-ts-tests.yml" src="https://img.shields.io/github/actions/workflow/status/nickesc/steploop/steploop-ts-tests.yml?logo=github&label=tests&logoColor=white&style=for-the-badge&labelColor=%23333"></a>
+            <a href="https://www.npmjs.com/package/steploop"><img alt="NPM: npmjs.com/package/steploop" src="https://img.shields.io/npm/v/steploop?style=for-the-badge&logo=npm&logoColor=white&label=npm&color=%23C12127&labelColor=%23333"></a>
+        </div>
 
         <div>
-            View <a href="">demo source code</a>
+            <p>View <a href="https://github.com/nickesc/steploop/blob/main/docs/script.js">demo source code</a>.</p>
+
+            <p>Open the browser's console to see the demo's logs.</p>
         </div>
     </div>
 
     <div>
-        <h2><code>StepLoop</code> Playground</h2>
+        <h2><code class="code-inline">StepLoop</code> Playground</h2>
         <div>
             <div>
                 <div>
                 <table>
                     <tr>
-                        <td>Step:</td>
+                        <td class="label-container"><label>Step</label></td>
                         <td><kbd><span id="frame">0</span></kbd></td>
                     </tr>
                     <tr>
-                        <td>Current lifespan:</td>
+                        <td class="label-container"><label>Current lifespan</label></td>
                         <td><kbd><span id="span">0</span></kbd></td>
                     </tr>
                     <tr>
-                        <td>Real SPS:</td>
+                        <td class="label-container"><label>Real SPS</label></td>
                         <td><kbd><span id="real-sps">0</span></kbd></td>
                     </tr>
                 </table>
@@ -77,22 +166,22 @@
             <div>
                 <table>
                     <tr>
-                        <td><label for="lifespan">Lifespan:</label></td>
+                        <td class="label-container"><label for="lifespan">Lifespan</label></td>
                         <td><input type="text" name="lifespan" id="lifespan" value="500"></td>
                     </tr>
                     <tr>
-                        <td><label for="extension">Extend lifespan:</label></td>
+                        <td class="label-container"><label for="extension">Extend lifespan</label></td>
                         <td><input type="text" name="extension" id="extension" value="500"></td>
                         <td><button id="extend">Extend</button></td>
                     </tr>
 
                     <tr>
-                        <td><label for="sps">Steps-per-second:</label></td>
+                        <td class="label-container"><label for="sps">Steps-per-second</label></td>
                         <td><input type="text" name="sps" id="sps" value="60"></td>
                         <td><button id="set-sps">Set</button></td>
                     </tr>
                     <tr>
-                        <td><label for="raf">Use RAF:</label></td>
+                        <td class="label-container"><label for="raf">Use RAF</label></td>
                         <td><input type="checkbox" name="raf" id="raf"></td>
                     </tr>
                 </table>
@@ -111,65 +200,16 @@
 
                 </table>
 
-
-            </div>
-            <div>
-
-
-            </div>
-            <div>
-
-
-            </div>
             <div id="container">
                 <div id="box" class="inactive">
 
                 </div>
             </div>
-
-            <style>
-                #title {
-                    display: flex;
-                    align-items: center;
-                    column-gap: .5em;
-
-                }
-
-                #icon {
-                    width: 2em;
-                }
-
-                #box {
-                    position: relative;
-                    width: 100px;
-                    height: 100px;
-                    left: 0px;
-                    background-color: grey;
-                }
-
-                #container {
-                    width: 100%;
-                    height: 124px;
-                    margin-top: 50px;
-                    border: #333 4px solid;
-                    padding: 8px;
-                }
-                #box.inactive, #box.paused{
-                    background-color: #ff959c;
-                }
-                #box.active{
-                    background-color: #ff4e59;
-                }
-                #box.paused{
-                    background-color: #ff959c;
-                    outline: #ff4e59 4px dashed;
-                }
-                #box.finished{
-                    background-color: #333;
-                }
-            </style>
         </div>
     </div>
+    <footer>
+        <h6>© 2025, nickesc & N. Escobar Media </h6><a class="badge" href="https://github.com/nickesc/steploop/blob/main/LICENSE"><img class="badge-img" alt="GitHub License" src="https://img.shields.io/github/license/nickesc/steploop?style=for-the-badge&labelColor=%23333&color=%230070ff"></a>
+    </footer>
 
     <script src="script.js" type="module"></script>
   </body>

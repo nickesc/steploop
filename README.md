@@ -75,7 +75,7 @@ const app = new App(60, 100);
 app.start();
 ```
 
-To see a `StepLoop` in action and play with execution, check out the [package demo](https://nickesc.github.io/steploop/).
+To see a `StepLoop` in action and play with execution, check out the [package demo page](https://nickesc.github.io/steploop/) or the [demo code](/docs/script.js).
 
 ## Lifecycle
 
